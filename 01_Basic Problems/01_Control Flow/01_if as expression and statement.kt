@@ -1,7 +1,5 @@
 fun main() {
 
-    // 1️⃣ If as Expression and Statement
-
     // Exercise 1 – Positive or Negative
     val n = readLine()!!.toInt()
     if (n > 0) {
