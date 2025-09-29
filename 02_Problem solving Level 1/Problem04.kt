@@ -4,10 +4,14 @@
 
 import java.util.Scanner
 
-// Data class to hold the base number and the power (equivalent to struct in C++)
+// -----------------------------------------------------------
+// Example 1 – Same methodology as the original C++ solution
+// -----------------------------------------------------------
+
+// Data class to hold the base number and the power
 data class Numbers(
-    val number: Int, // The base number
-    val m: Int       // The power
+    val number: Int,
+    val m: Int
 )
 
 // Function to read the number and the power from the user
@@ -16,21 +20,53 @@ fun readNumbers(scanner: Scanner): Numbers {
     val number = scanner.nextInt()
     print("Enter the power: ")
     val m = scanner.nextInt()
-    return Numbers(number, m) // Return the data class with both values
+    return Numbers(number, m)
 }
 
-// Function to calculate and print the power
+// Function to calculate and print the power using a loop
 fun power(nub: Numbers) {
-    var multi = 1 // Variable to store the result of the power
-    // Multiply nub.number by itself nub.m times
+    var multi = 1
     for (i in 1..nub.m) {
         multi *= nub.number
     }
     println("Power of ${nub.number}^${nub.m} is: $multi")
 }
 
+fun runExample1(scanner: Scanner) {
+    power(readNumbers(scanner))
+}
+
+// -----------------------------------------------------------
+// Example 2 – More Kotlin-idiomatic solution
+// -----------------------------------------------------------
+// Uses readLine(), safe parsing, and Math.pow for simplicity.
+
+fun runExample2() {
+    println("\n=== Example 2: Kotlin-idiomatic ===")
+    print("Enter base number: ")
+    val base = readLine()?.toIntOrNull()
+    print("Enter power: ")
+    val exponent = readLine()?.toIntOrNull()
+
+    if (base == null || exponent == null) {
+        println("Invalid input.")
+        return
+    }
+
+    // Math.pow returns Double; convert to Long/Int if needed
+    val result = Math.pow(base.toDouble(), exponent.toDouble()).toLong()
+    println("Power of $base^$exponent is: $result")
+}
+
+// -----------------------------------------------------------
+// Main
+// -----------------------------------------------------------
+
 fun main() {
     val scanner = Scanner(System.`in`)
-    // Read number and power, then calculate and print the result
-    power(readNumbers(scanner))
+    println("=== Example 1: Classic style ===")
+    runExample1(scanner)
+
+    // Show the more idiomatic version
+    runExample2()
 }
