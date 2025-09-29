@@ -1,36 +1,58 @@
 // 🔹 Question / Task:
-// Write a program that reads a student's grade (0-100) and prints the corresponding letter grade:
-// A: 90-100, B: 80-89, C: 70-79, D: 60-69, E: 50-59, F: below 50
+// Write a program that reads the number of coins a person has:
+// Pennies, Nickels, Dimes, Quarters, and Dollars.
+// Then calculate and print the total value in pennies and in dollars.
 
 import java.util.Scanner
 
-// Function to read a grade between 0 and 100
-fun readGrade(scanner: Scanner): Int {
-    var grade: Int
-    do {
-        print("Enter the grade (0-100): ")
-        grade = scanner.nextInt()
-        if (grade < 0 || grade > 100) {
-            println("Invalid grade! Please enter a value between 0 and 100.")
-        }
-    } while (grade < 0 || grade > 100)  // Repeat until valid input
-    return grade
+// Data class to store counts of each coin type (equivalent to struct in C++)
+data class Money(
+    var penny: Int,   // Number of pennies
+    var nickel: Int,  // Number of nickels (5 cents each)
+    var dime: Int,    // Number of dimes (10 cents each)
+    var quarter: Int, // Number of quarters (25 cents each)
+    var dollar: Int   // Number of dollars (100 cents each)
+)
+
+// Function to read the amount of each coin
+fun readMoney(scanner: Scanner): Money {
+    print("Enter number of Pennies: ")
+    val penny = scanner.nextInt()
+
+    print("Enter number of Nickels: ")
+    val nickel = scanner.nextInt()
+
+    print("Enter number of Dimes: ")
+    val dime = scanner.nextInt()
+
+    print("Enter number of Quarters: ")
+    val quarter = scanner.nextInt()
+
+    print("Enter number of Dollars: ")
+    val dollar = scanner.nextInt()
+
+    return Money(penny, nickel, dime, quarter, dollar)
 }
 
-// Function to check and print the letter grade
-fun checkAverage(grade: Int) {
-    when {
-        grade >= 90 -> println("Grade: A")
-        grade >= 80 -> println("Grade: B")
-        grade >= 70 -> println("Grade: C")
-        grade >= 60 -> println("Grade: D")
-        grade >= 50 -> println("Grade: E")
-        else        -> println("Grade: F")
-    }
+// Function to calculate total value in pennies
+fun totalPenny(m: Money): Int {
+    return m.penny + (m.nickel * 5) + (m.dime * 10) + (m.quarter * 25) + (m.dollar * 100)
+}
+
+// Function to calculate total value in dollars
+fun totalDollars(m: Money): Int {
+    return totalPenny(m) / 100
 }
 
 fun main() {
     val scanner = Scanner(System.`in`)
-    val grade = readGrade(scanner)   // Read valid grade
-    checkAverage(grade)              // Print corresponding letter grade
+
+    // Read coin amounts from user
+    val money = readMoney(scanner)
+
+    // Print total in pennies
+    println("Total in Pennies: ${totalPenny(money)}")
+
+    // Print total in dollars
+    println("Total in Dollars: ${totalDollars(money)}")
 }

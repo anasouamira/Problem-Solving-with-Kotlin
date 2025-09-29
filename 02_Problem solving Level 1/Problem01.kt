@@ -8,14 +8,17 @@
 
 import java.util.Scanner
 
-// Data class to hold person's information (equivalent to struct in C++)
+// ------------------------------------------------------------------
+// Example 1 – Same methodology as the original (struct-like, looped)
+// ------------------------------------------------------------------
+
 data class PersonInfo(
     var age: Int,                   // Person's age
-    var hasDriverLicence: Boolean,  // Does the person have a driver licence? (true = yes, false = no)
-    var hasRecommendation: Boolean  // Does the person have a recommendation? (true = yes, false = no)
+    var hasDriverLicence: Boolean,  // Driver licence? true/false
+    var hasRecommendation: Boolean  // Recommendation? true/false
 )
 
-// Function to read person's information from user input
+// Read input exactly like the C++ version
 fun readInfo(scanner: Scanner): PersonInfo {
     println("*****************************************")
     print("Enter your Age: ")
@@ -30,28 +33,60 @@ fun readInfo(scanner: Scanner): PersonInfo {
     return PersonInfo(age, hasDriverLicence, hasRecommendation)
 }
 
-// Function to check if the person is accepted
+// Check if person is accepted
 fun isAccepted(person: PersonInfo): Boolean {
-    // Accepted if age >= 21 OR has driver licence, AND does NOT have recommendation
     return (person.age >= 21 || person.hasDriverLicence) && !person.hasRecommendation
 }
 
-// Function to print result based on acceptance
-fun printInfo(scanner: Scanner, person: PersonInfo) {
-    // Keep asking while the person is NOT accepted
-    var p = person
+// Loop until accepted
+fun runExample1(scanner: Scanner) {
+    var p = readInfo(scanner)
     while (!isAccepted(p)) {
         println("You are rejected")
         println("*****************************************")
         println("Enter again")
-        p = readInfo(scanner) // Re-read the person's info
+        p = readInfo(scanner)
     }
-
     println("*****************************************")
     println("You are hired")
 }
 
+// ------------------------------------------------------------------
+// Example 2 – More Kotlin-idiomatic solution
+// ------------------------------------------------------------------
+// Uses readLine(), nullable parsing, and a single loop without a separate data class.
+
+fun runExample2() {
+    println("\n=== Example 2: Kotlin-idiomatic ===")
+    while (true) {
+        print("Enter age: ")
+        val age = readLine()?.toIntOrNull() ?: continue
+
+        print("Driver licence? (1=yes, 0=no): ")
+        val hasLicence = readLine()?.toIntOrNull() == 1
+
+        print("Recommendation? (1=yes, 0=no): ")
+        val hasRecommendation = readLine()?.toIntOrNull() == 1
+
+        val accepted = (age >= 21 || hasLicence) && !hasRecommendation
+        if (accepted) {
+            println("You are hired")
+            break
+        } else {
+            println("You are rejected — please try again\n")
+        }
+    }
+}
+
+// ------------------------------------------------------------------
+// Main
+// ------------------------------------------------------------------
+
 fun main() {
     val scanner = Scanner(System.`in`)
-    printInfo(scanner, readInfo(scanner)) // Start the program by reading info and printing result
+    println("=== Example 1: Classic style ===")
+    runExample1(scanner)
+
+    // Then show the idiomatic version
+    runExample2()
 }
