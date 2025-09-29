@@ -1,20 +1,21 @@
 // 🔹 Question / Task:
-// Write a program that reads the number of coins a person has:
-// Pennies, Nickels, Dimes, Quarters, and Dollars.
-// Then calculate and print the total value in pennies and in dollars.
+// Read counts of Pennies, Nickels, Dimes, Quarters, and Dollars.
+// Print total value in pennies and dollars.
 
 import java.util.Scanner
 
-// Data class to store counts of each coin type (equivalent to struct in C++)
+// -----------------------------------------------------------
+// Example 1 – Same methodology as original C++ style
+// -----------------------------------------------------------
+
 data class Money(
-    var penny: Int,   // Number of pennies
-    var nickel: Int,  // Number of nickels (5 cents each)
-    var dime: Int,    // Number of dimes (10 cents each)
-    var quarter: Int, // Number of quarters (25 cents each)
-    var dollar: Int   // Number of dollars (100 cents each)
+    var penny: Int,
+    var nickel: Int,
+    var dime: Int,
+    var quarter: Int,
+    var dollar: Int
 )
 
-// Function to read the amount of each coin
 fun readMoney(scanner: Scanner): Money {
     print("Enter number of Pennies: ")
     val penny = scanner.nextInt()
@@ -34,25 +35,51 @@ fun readMoney(scanner: Scanner): Money {
     return Money(penny, nickel, dime, quarter, dollar)
 }
 
-// Function to calculate total value in pennies
-fun totalPenny(m: Money): Int {
-    return m.penny + (m.nickel * 5) + (m.dime * 10) + (m.quarter * 25) + (m.dollar * 100)
+fun totalPennies(m: Money): Int =
+    m.penny + m.nickel * 5 + m.dime * 10 + m.quarter * 25 + m.dollar * 100
+
+fun totalDollars(m: Money): Int = totalPennies(m) / 100
+
+fun runExample1(scanner: Scanner) {
+    val money = readMoney(scanner)
+    println("Total in Pennies: ${totalPennies(money)}")
+    println("Total in Dollars: ${totalDollars(money)}")
 }
 
-// Function to calculate total value in dollars
-fun totalDollars(m: Money): Int {
-    return totalPenny(m) / 100
+// -----------------------------------------------------------
+// Example 2 – Kotlin-idiomatic concise version
+// -----------------------------------------------------------
+// Uses a map and loops instead of fixed fields.
+
+fun runExample2() {
+    println("\n=== Example 2: Kotlin-idiomatic ===")
+    val coinValues = mapOf(
+        "Pennies" to 1,
+        "Nickels" to 5,
+        "Dimes" to 10,
+        "Quarters" to 25,
+        "Dollars" to 100
+    )
+
+    var totalCents = 0
+    for ((coin, value) in coinValues) {
+        print("Enter number of $coin: ")
+        val count = readLine()?.toIntOrNull() ?: 0
+        totalCents += count * value
+    }
+
+    println("Total in Pennies: $totalCents")
+    println("Total in Dollars: ${totalCents / 100}")
 }
+
+// -----------------------------------------------------------
+// Main
+// -----------------------------------------------------------
 
 fun main() {
     val scanner = Scanner(System.`in`)
+    println("=== Example 1: Classic style ===")
+    runExample1(scanner)
 
-    // Read coin amounts from user
-    val money = readMoney(scanner)
-
-    // Print total in pennies
-    println("Total in Pennies: ${totalPenny(money)}")
-
-    // Print total in dollars
-    println("Total in Dollars: ${totalDollars(money)}")
+    runExample2()
 }
