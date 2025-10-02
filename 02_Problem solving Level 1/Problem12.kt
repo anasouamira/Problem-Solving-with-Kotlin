@@ -10,7 +10,6 @@ import java.util.Scanner
 // -----------------------------------------------------------
 // Example 1 – Classic style (mirrors C++ structure)
 // -----------------------------------------------------------
-
 const val ATM_PIN = 1234
 const val BALANCE = 7500
 const val CARD_IS_LOCKED = 0
