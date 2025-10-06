@@ -1,103 +1,71 @@
-// 🔹 Problem04: Print all perfect numbers from 1 to N
-// Two approaches are shown here:
-// - Example 1: Classic version (direct C++ translation, check divisors up to n/2)
-// - Example 2: Optimized Kotlin version (check up to sqrt(n))
+/*
+Problem09 |===============================================
 
-import kotlin.math.sqrt
+Write a program to read a number, then print all digit
+frequency in that number
 
-// ===========================================================
-// Example 1 — Classic style (C++ translation methodology)
-// ===========================================================
+Input : 
+1223222
 
-/**
- * Enum to represent whether a number is Perfect or NotPerfect.
- */
-enum class PerfectStatus { Perfect, NotPerfect }
+Output :
 
-/**
- * Reads a non-negative integer from the user.
- * Keeps retrying until user enters valid non-negative integer.
- */
-fun readPositiveNumberClassic(message: String): Int {
-    var number: Int
-    do {
-        print(message)
-        number = readLine()?.toIntOrNull() ?: -1  // ✅ use -1 instead of Int.MIN_VALUE (simpler logic)
-    } while (number < 0)
-    return number
+Digit 1 Frequency is 1 Time(s).
+Digit 2 Frequency is 5 Time(s).
+Digit 3 Frequency is 1 Time(s).
+
+==========================================================
+*/
+
+
+#include <iostream>
+using namespace std;
+
+// Function to read a positive number from the user
+int ReadPositiveNumber(string Message)
+{
+    int Number = 0;
+    do
+    {
+        cout << Message << endl;
+        cin >> Number;
+    } while (Number <= 0);
+    return Number;
 }
 
-/**
- * Checks if a number is perfect by summing divisors up to n/2.
- */
-fun checkPerfectClassic(number: Int): PerfectStatus {
-    if (number <= 1) return PerfectStatus.NotPerfect
-    val limit = number / 2
-    var sum = 0
-    for (d in 1..limit) {
-        if (number % d == 0) sum += d
+// Function to count the frequency of a specific digit in a given number
+int CountDigitFrequency(short DigitToCheck, int Number)
+{
+    int FreqCount = 0, Remainder = 0;
+
+    while (Number > 0)
+    {
+        Remainder = Number % 10; // Extract the last digit
+        Number = Number / 10;    // Remove the last digit
+        if (DigitToCheck == Remainder)
+        {
+            FreqCount++; // Increment the frequency counter if digit matches
+        }
     }
-    return if (sum == number) PerfectStatus.Perfect else PerfectStatus.NotPerfect
+    return FreqCount;
 }
 
-/**
- * Prints all perfect numbers from 1 to N using the classic method.
- */
-fun printPerfectNumbersClassic(n: Int) {
-    println("\nPerfect numbers from 1 to $n (classic):")
-    for (i in 1..n) {
-        if (checkPerfectClassic(i) == PerfectStatus.Perfect) {
-            println(i)
+// Function to print the frequency of each digit (1-9) in a given number
+void PrintDigitFrequency(int Number)
+{
+    for (int DigitToCheck = 1; DigitToCheck <= 9; DigitToCheck++)
+    {
+        short DigitFrequency = CountDigitFrequency(DigitToCheck, Number);
+
+        if (DigitFrequency > 0)
+        {
+            cout << "\nDigit " << DigitToCheck << " Frequency is " << DigitFrequency << " Time(s).\n";
         }
     }
 }
 
-
-// ===========================================================
-// Example 2 — Optimized Kotlin version
-// ===========================================================
-
-/**
- * Optimized check for perfect number using sqrt.
- */
-fun isPerfectOptimized(n: Int): Boolean {
-    if (n <= 1) return false
-    var sum = 1 // 1 is always a divisor for n > 1
-    val limit = sqrt(n.toDouble()).toInt()
-
-    for (i in 2..limit) {
-        if (n % i == 0) {
-            val other = n / i
-            sum += i
-            if (other != i) sum += other
-        }
-    }
-    return sum == n
-}
-
-/**
- * Prints all perfect numbers from 1 to N using the optimized method.
- */
-fun printPerfectNumbersOptimized(n: Int) {
-    println("\nPerfect numbers from 1 to $n (optimized):")
-    for (i in 2..n) {
-        if (isPerfectOptimized(i)) {
-            println(i)
-        }
-    }
-}
-
-
-// ===========================================================
-// Main function
-// ===========================================================
-fun main() {
-    // ✅ Using the classic input function instead of duplicating input logic
-    val number = readPositiveNumberClassic("Enter a positive number to find all perfect numbers from 1 to N: ")
-
-    // Example 1 — same as the C++ methodology
-    printPerfectNumbersClassic(number)
-
-    // Example 2 — optimized professional version
-    printPerfectNumbersOptimized(number)
+int main()
+{
+    // Read a positive number from the user and print its digit frequency
+    PrintDigitFrequency(ReadPositiveNumber("Please enter the main number ? "));
+    return 0;
 }
