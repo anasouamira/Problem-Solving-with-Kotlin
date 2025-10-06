@@ -1,111 +1,66 @@
-// 🔹 Problem04: Print all perfect numbers from 1 to N
-// We provide two approaches in one file:
-// - Example 1: Direct translation of the original C++ methodology (check divisors up to n/2).
-// - Example 2: Optimized professional version (using sqrt).
+// 🔹 Problem06: Read a number and print the sum of its digits
+// This file includes two examples:
+// Example 1 → Classic translation from C++ (same logic step-by-step)
+// Example 2 → Professional Kotlin version (concise and idiomatic)
 
-import kotlin.math.sqrt
 
 // ===========================================================
-// Example 1 — Classic style (C++ translation methodology)
+// Example 1 — Classic translation from the C++ methodology
 // ===========================================================
 
 /**
- * Enum to represent whether a number is Perfect or NotPerfect.
- * This mirrors the C++ enum enmPrefectNotPerfect.
- */
-enum class PerfectStatus { Perfect, NotPerfect }
-
-/**
- * Reads a non-negative integer from the user.
- * Keeps retrying until user enters valid non-negative integer.
+ * Reads a positive integer from the user.
+ * Keeps asking until a non-negative number is entered.
  */
 fun readPositiveNumberClassic(message: String): Int {
     var number: Int
     do {
         print(message)
-        number = readLine()?.toIntOrNull() ?: Int.MIN_VALUE
+        number = readLine()?.toIntOrNull() ?: -1
     } while (number < 0)
     return number
 }
 
 /**
- * Checks if a number is perfect by summing divisors up to n/2.
- * Returns PerfectStatus.Perfect if equal to the number.
+ * Calculates and prints the sum of digits using arithmetic operations.
  */
-fun checkPerfectClassic(number: Int): PerfectStatus {
-    if (number <= 1) return PerfectStatus.NotPerfect
-    val limit = number / 2
+fun printSumOfDigitsClassic(number: Int) {
+    var num = number
     var sum = 0
-    for (d in 1..limit) {
-        if (number % d == 0) sum += d
-    }
-    return if (sum == number) PerfectStatus.Perfect else PerfectStatus.NotPerfect
-}
 
-/**
- * Prints all perfect numbers from 1 to N using the classic method.
- */
-fun printPerfectNumbersClassic(n: Int) {
-    println("\nPerfect numbers from 1 to $n (classic):")
-    for (i in 1..n) {
-        if (checkPerfectClassic(i) == PerfectStatus.Perfect) {
-            println(i)
-        }
-    }
+    do {
+        val remainder = num % 10  // Extract the last digit
+        sum += remainder          // Add it to the sum
+        num /= 10                 // Remove the last digit
+    } while (num > 0)
+
+    println("Sum of digits (classic method): $sum")
 }
 
 
 // ===========================================================
-// Example 2 — Optimized professional version
+// Example 2 — Professional idiomatic Kotlin version
 // ===========================================================
 
 /**
- * Optimized check for perfect number using sqrt.
+ * Calculates the sum of digits using functional Kotlin features.
  */
-fun isPerfectOptimized(n: Int): Boolean {
-    if (n <= 1) return false
-    var sum = 1 // 1 is always a divisor for n > 1
-    val limit = sqrt(n.toDouble()).toInt()
-
-    for (i in 2..limit) {
-        if (n % i == 0) {
-            val other = n / i
-            sum += i
-            if (other != i) sum += other
-        }
-    }
-    return sum == n
-}
-
-/**
- * Prints all perfect numbers from 1 to N using the optimized method.
- */
-fun printPerfectNumbersOptimized(n: Int) {
-    println("\nPerfect numbers from 1 to $n (optimized):")
-    for (i in 2..n) {
-        if (isPerfectOptimized(i)) {
-            println(i)
-        }
-    }
+fun printSumOfDigitsOptimized(number: Int) {
+    val sum = number.toString().sumOf { it.digitToInt() }
+    println("Sum of digits (optimized Kotlin method): $sum")
 }
 
 
 // ===========================================================
 // Main function
 // ===========================================================
+
 fun main() {
-    val number = run {
-        var n: Int?
-        do {
-            print("Enter a positive number to find all perfect numbers from 1 to N: ")
-            n = readLine()?.toIntOrNull()
-        } while (n == null || n < 0)
-        n
-    }
+    val number = readPositiveNumberClassic("Enter a positive number to calculate the sum of its digits: ")
 
-    // Example 1 — same as the C++ methodology
-    printPerfectNumbersClassic(number)
+    // Example 1: C++-style logic
+    printSumOfDigitsClassic(number)
 
-    // Example 2 — optimized professional version
-    printPerfectNumbersOptimized(number)
+    // Example 2: Professional Kotlin-style solution
+    printSumOfDigitsOptimized(number)
 }
