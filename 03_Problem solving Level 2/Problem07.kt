@@ -1,7 +1,7 @@
 // 🔹 Problem04: Print all perfect numbers from 1 to N
-// We provide two approaches in one file:
-// - Example 1: Direct translation of the original C++ methodology (check divisors up to n/2).
-// - Example 2: Optimized professional version (using sqrt).
+// Two approaches are shown here:
+// - Example 1: Classic version (direct C++ translation, check divisors up to n/2)
+// - Example 2: Optimized Kotlin version (check up to sqrt(n))
 
 import kotlin.math.sqrt
 
@@ -11,7 +11,6 @@ import kotlin.math.sqrt
 
 /**
  * Enum to represent whether a number is Perfect or NotPerfect.
- * This mirrors the C++ enum enmPrefectNotPerfect.
  */
 enum class PerfectStatus { Perfect, NotPerfect }
 
@@ -23,14 +22,13 @@ fun readPositiveNumberClassic(message: String): Int {
     var number: Int
     do {
         print(message)
-        number = readLine()?.toIntOrNull() ?: Int.MIN_VALUE
+        number = readLine()?.toIntOrNull() ?: -1  // ✅ use -1 instead of Int.MIN_VALUE (simpler logic)
     } while (number < 0)
     return number
 }
 
 /**
  * Checks if a number is perfect by summing divisors up to n/2.
- * Returns PerfectStatus.Perfect if equal to the number.
  */
 fun checkPerfectClassic(number: Int): PerfectStatus {
     if (number <= 1) return PerfectStatus.NotPerfect
@@ -56,7 +54,7 @@ fun printPerfectNumbersClassic(n: Int) {
 
 
 // ===========================================================
-// Example 2 — Optimized professional version
+// Example 2 — Optimized Kotlin version
 // ===========================================================
 
 /**
@@ -94,14 +92,8 @@ fun printPerfectNumbersOptimized(n: Int) {
 // Main function
 // ===========================================================
 fun main() {
-    val number = run {
-        var n: Int?
-        do {
-            print("Enter a positive number to find all perfect numbers from 1 to N: ")
-            n = readLine()?.toIntOrNull()
-        } while (n == null || n < 0)
-        n
-    }
+    // ✅ Using the classic input function instead of duplicating input logic
+    val number = readPositiveNumberClassic("Enter a positive number to find all perfect numbers from 1 to N: ")
 
     // Example 1 — same as the C++ methodology
     printPerfectNumbersClassic(number)
