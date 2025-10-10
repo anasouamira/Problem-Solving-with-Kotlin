@@ -1,71 +1,120 @@
 /*
-Problem09 |===============================================
+Problem09 |=============================================================
 
-Write a program to read a number, then print all digit
-frequency in that number
+Write a program to read a number, then print all digit frequencies 
+(1–9) appearing in that number.
 
-Input : 
+Input:
 1223222
 
-Output :
-
+Output:
 Digit 1 Frequency is 1 Time(s).
 Digit 2 Frequency is 5 Time(s).
 Digit 3 Frequency is 1 Time(s).
 
-==========================================================
+=======================================================================
 */
 
+// ===========================================================
+// Example 1 — Classic C++-style methodology
+// ===========================================================
 
-#include <iostream>
-using namespace std;
-
-// Function to read a positive number from the user
-int ReadPositiveNumber(string Message)
-{
-    int Number = 0;
-    do
-    {
-        cout << Message << endl;
-        cin >> Number;
-    } while (Number <= 0);
-    return Number;
+/**
+ * Reads a positive integer from the user.
+ * Keeps asking until a valid (non-negative) number is entered.
+ */
+fun readPositiveNumberClassic(message: String): Int {
+    var number: Int?
+    do {
+        print(message)
+        number = readLine()?.toIntOrNull()
+    } while (number == null || number <= 0)
+    return number
 }
 
-// Function to count the frequency of a specific digit in a given number
-int CountDigitFrequency(short DigitToCheck, int Number)
-{
-    int FreqCount = 0, Remainder = 0;
+/**
+ * Counts the frequency of a specific digit within a given number.
+ * Uses the same mathematical method as the original C++ code (modulus and division).
+ */
+fun countDigitFrequencyClassic(digitToCheck: Int, numberInput: Int): Int {
+    var number = numberInput
+    var remainder: Int
+    var frequency = 0
 
-    while (Number > 0)
-    {
-        Remainder = Number % 10; // Extract the last digit
-        Number = Number / 10;    // Remove the last digit
-        if (DigitToCheck == Remainder)
-        {
-            FreqCount++; // Increment the frequency counter if digit matches
+    while (number > 0) {
+        remainder = number % 10 // Extract last digit
+        number /= 10            // Remove last digit
+        if (remainder == digitToCheck)
+            frequency++
+    }
+
+    return frequency
+}
+
+/**
+ * Prints the frequency of all digits (1–9) found in the given number.
+ */
+fun printDigitFrequenciesClassic(number: Int) {
+    println("\nDigit frequency (classic approach):")
+    for (digit in 1..9) {
+        val count = countDigitFrequencyClassic(digit, number)
+        if (count > 0) {
+            println("Digit $digit Frequency is $count Time(s).")
         }
     }
-    return FreqCount;
 }
 
-// Function to print the frequency of each digit (1-9) in a given number
-void PrintDigitFrequency(int Number)
-{
-    for (int DigitToCheck = 1; DigitToCheck <= 9; DigitToCheck++)
-    {
-        short DigitFrequency = CountDigitFrequency(DigitToCheck, Number);
 
-        if (DigitFrequency > 0)
-        {
-            cout << "\nDigit " << DigitToCheck << " Frequency is " << DigitFrequency << " Time(s).\n";
+// ===========================================================
+// Example 2 — Optimized Kotlin version
+// ===========================================================
+
+/**
+ * Reads a positive integer (same as before, but reused here).
+ */
+fun readPositiveNumberOptimized(message: String): Int {
+    var number: Int?
+    do {
+        print(message)
+        number = readLine()?.toIntOrNull()
+    } while (number == null || number <= 0)
+    return number
+}
+
+/**
+ * Optimized version that uses string processing instead of math.
+ * Converts the number to a string and uses count() for each digit.
+ */
+fun printDigitFrequenciesOptimized(number: Int) {
+    val numberStr = number.toString()
+
+    println("\nDigit frequency (optimized Kotlin approach):")
+    for (digit in '0'..'9') {
+        val count = numberStr.count { it == digit }
+        if (count > 0) {
+            println("Digit $digit Frequency is $count Time(s).")
         }
     }
 }
 
-int main()
-{
-    // Read a positive number from the user and print its digit frequency
-    PrintDigitFrequency(ReadPositiveNumber("Please enter the main number ? "));
-    return 0;
+
+// ===========================================================
+// Main function — Runs both examples
+// ===========================================================
+fun main() {
+    // Read the number once and use it in both methods
+    val number = run {
+        var n: Int?
+        do {
+            print("Please enter the main number: ")
+            n = readLine()?.toIntOrNull()
+        } while (n == null || n <= 0)
+        n
+    }
+
+    // Example 1 — C++ style
+    printDigitFrequenciesClassic(number)
+
+    // Example 2 — Optimized Kotlin style
+    printDigitFrequenciesOptimized(number)
 }
