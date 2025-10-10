@@ -1,30 +1,32 @@
 /*
-Problem 28 |=================================================
+Problem 27 |=================================================
 Write a program to fill array with max size 100 with random
-numbers from 1 to 100, copy it to another array and print it.
+numbers from 1 to 100, then print average of all numbers
 
-Input
+Input:
 10
 
 Output:
 
-Array 1 elements: 1 47 51 18 85 62 51 61 82 4
+Array Elements: 24 36 44 73 8 56 98 67 33 71
 
-Array 2 elements after copy: 1 47 51 18 85 62 51 61 82 4
+Average of all numbers is : 51
 =============================================================
 */
 
 import kotlin.random.Random
 
 // ===========================================================
-// Classic Approach (Fixed Array)
+// Example 1 — Classic C++ Style Translation
 // ===========================================================
 fun randomNumberClassic(from: Int, to: Int): Int {
     return Random.nextInt(from, to + 1)
 }
 
 fun fillArrayClassic(arr: IntArray, arrLength: Int) {
-    for (i in 0 until arrLength) arr[i] = randomNumberClassic(1, 100)
+    for (i in 0 until arrLength) {
+        arr[i] = randomNumberClassic(1, 100)
+    }
 }
 
 fun printArrayClassic(arr: IntArray, arrLength: Int) {
@@ -32,18 +34,20 @@ fun printArrayClassic(arr: IntArray, arrLength: Int) {
     println()
 }
 
-fun copyArrayClassic(source: IntArray, destination: IntArray, arrLength: Int) {
-    for (i in 0 until arrLength) destination[i] = source[i]
+fun arrayAverageClassic(arr: IntArray, arrLength: Int): Float {
+    var sum = 0
+    for (i in 0 until arrLength) sum += arr[i]
+    return sum.toFloat() / arrLength
 }
 
 // ===========================================================
-// Kotlin Idiomatic Approach (List)
+// Example 2 — Optimized Kotlin Version
 // ===========================================================
-fun fillList(size: Int): List<Int> {
+fun fillArrayOptimized(size: Int): List<Int> {
     return List(size) { Random.nextInt(1, 101) }
 }
 
-fun printList(list: List<Int>) {
+fun printArrayOptimized(list: List<Int>) {
     println(list.joinToString(" "))
 }
 
@@ -51,27 +55,20 @@ fun printList(list: List<Int>) {
 // Main Function
 // ===========================================================
 fun main() {
-    // Classic Approach
+    // Classic approach
     print("Enter number of elements (Classic Version): ")
     val nClassic = readLine()?.toIntOrNull()?.coerceAtMost(100) ?: 0
     val arrClassic = IntArray(nClassic)
     fillArrayClassic(arrClassic, nClassic)
-    val arr2Classic = IntArray(nClassic)
-    copyArrayClassic(arrClassic, arr2Classic, nClassic)
-
-    println("\nArray 1 elements:")
+    println("\nArray Elements (Classic):")
     printArrayClassic(arrClassic, nClassic)
-    println("Array 2 elements after copy:")
-    printArrayClassic(arr2Classic, nClassic)
+    println("Average of all numbers: ${arrayAverageClassic(arrClassic, nClassic)}")
 
-    // Kotlin Idiomatic Approach
+    // Optimized Kotlin approach
     print("\nEnter number of elements (Optimized Version): ")
     val nOptimized = readLine()?.toIntOrNull()?.coerceAtMost(100) ?: 0
-    val list1 = fillList(nOptimized)
-    val list2 = list1.toList() // Copy by creating a new list
-
-    println("\nArray 1 elements:")
-    printList(list1)
-    println("Array 2 elements after copy:")
-    printList(list2)
+    val listOptimized = fillArrayOptimized(nOptimized)
+    println("\nArray Elements (Optimized):")
+    printArrayOptimized(listOptimized)
+    println("Average of all numbers: ${listOptimized.average()}")
 }

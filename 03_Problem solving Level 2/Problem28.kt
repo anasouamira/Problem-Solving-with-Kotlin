@@ -1,30 +1,30 @@
 /*
-Problem 25 |=================================================
+Problem 28 |=================================================
 Write a program to fill array with max size 100 with random
-numbers from 1 to 100, then print Minimum Number 
+numbers from 1 to 100, copy it to another array and print it.
 
-Input:
-10 
+Input
+10
 
 Output:
-Array Elements: 30 99 72 47 95 67 29 13 80 64 
-Min Number is: 13 
+
+Array 1 elements: 1 47 51 18 85 62 51 61 82 4
+
+Array 2 elements after copy: 1 47 51 18 85 62 51 61 82 4
 =============================================================
 */
 
 import kotlin.random.Random
 
 // ===========================================================
-// Example 1 — Classic C++ Style Translation
+// Classic Approach (Fixed Array)
 // ===========================================================
 fun randomNumberClassic(from: Int, to: Int): Int {
     return Random.nextInt(from, to + 1)
 }
 
 fun fillArrayClassic(arr: IntArray, arrLength: Int) {
-    for (i in 0 until arrLength) {
-        arr[i] = randomNumberClassic(1, 100)
-    }
+    for (i in 0 until arrLength) arr[i] = randomNumberClassic(1, 100)
 }
 
 fun printArrayClassic(arr: IntArray, arrLength: Int) {
@@ -32,22 +32,18 @@ fun printArrayClassic(arr: IntArray, arrLength: Int) {
     println()
 }
 
-fun minNumberClassic(arr: IntArray, arrLength: Int): Int {
-    var min = arr[0]
-    for (i in 1 until arrLength) {
-        if (arr[i] < min) min = arr[i]
-    }
-    return min
+fun copyArrayClassic(source: IntArray, destination: IntArray, arrLength: Int) {
+    for (i in 0 until arrLength) destination[i] = source[i]
 }
 
 // ===========================================================
-// Example 2 — Optimized Kotlin Version
+// Kotlin Idiomatic Approach (List)
 // ===========================================================
-fun fillArrayOptimized(size: Int): List<Int> {
+fun fillList(size: Int): List<Int> {
     return List(size) { Random.nextInt(1, 101) }
 }
 
-fun printArrayOptimized(list: List<Int>) {
+fun printList(list: List<Int>) {
     println(list.joinToString(" "))
 }
 
@@ -55,20 +51,27 @@ fun printArrayOptimized(list: List<Int>) {
 // Main Function
 // ===========================================================
 fun main() {
-    // Classic approach
+    // Classic Approach
     print("Enter number of elements (Classic Version): ")
     val nClassic = readLine()?.toIntOrNull()?.coerceAtMost(100) ?: 0
     val arrClassic = IntArray(nClassic)
     fillArrayClassic(arrClassic, nClassic)
-    println("\nArray Elements (Classic):")
-    printArrayClassic(arrClassic, nClassic)
-    println("Min Number is : ${minNumberClassic(arrClassic, nClassic)}")
+    val arr2Classic = IntArray(nClassic)
+    copyArrayClassic(arrClassic, arr2Classic, nClassic)
 
-    // Optimized Kotlin approach
+    println("\nArray 1 elements:")
+    printArrayClassic(arrClassic, nClassic)
+    println("Array 2 elements after copy:")
+    printArrayClassic(arr2Classic, nClassic)
+
+    // Kotlin Idiomatic Approach
     print("\nEnter number of elements (Optimized Version): ")
     val nOptimized = readLine()?.toIntOrNull()?.coerceAtMost(100) ?: 0
-    val listOptimized = fillArrayOptimized(nOptimized)
-    println("\nArray Elements (Optimized):")
-    printArrayOptimized(listOptimized)
-    println("Min Number is : ${listOptimized.minOrNull()}")
+    val list1 = fillList(nOptimized)
+    val list2 = list1.toList() // Copy by creating a new list
+
+    println("\nArray 1 elements:")
+    printList(list1)
+    println("Array 2 elements after copy:")
+    printList(list2)
 }
