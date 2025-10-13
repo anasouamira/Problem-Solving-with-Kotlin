@@ -1,124 +1,93 @@
-// ===============================================================
-// Problem 31 - Shuffle Array
-// ===============================================================
-//
-// Write a program to fill an array with ordered numbers from 1 to N,
-// then print it, shuffle the array randomly, and print it again.
-//
-// Example:
-// Input: 10
-//
-// Output:
-// Array elements before shuffle:
-// 1 2 3 4 5 6 7 8 9 10
-//
-// Array elements after shuffle:
-// 2 4 6 3 10 1 7 8 5 9
-// ===============================================================
-
 import kotlin.random.Random
 
-// =============================
-// VERSION 1 – Step-by-Step (C++ style)
-// =============================
+/* ===============================================================
+   🧩 Example 1 — Same Logic as C++ Version (Educational)
+   =============================================================== */
 
-// Function to read a positive number from the user
-fun readPositiveNumber(message: String): Int {
-    var number: Int
-    do {
-        print("$message ")
-        number = readln().toInt()
-    } while (number <= 0)
-    return number
-}
-
-// Function to swap two elements inside an array
-fun swap(arr: IntArray, i: Int, j: Int) {
-    val temp = arr[i]
-    arr[i] = arr[j]
-    arr[j] = temp
-}
-
-// Function to fill an array with ordered numbers from 1 to N
-fun fillArrayWith1ToN(arrLength: Int): IntArray {
-    val arr = IntArray(arrLength)
-    for (i in 0 until arrLength) {
-        arr[i] = i + 1 // Fill array with numbers 1, 2, 3, ..., N
-    }
-    return arr
-}
-
-// Function to generate a random number within a given range
+// Function to generate a random number between From and To
 fun randomNumber(from: Int, to: Int): Int {
     return Random.nextInt(from, to + 1)
 }
 
-// Function to shuffle array elements randomly
-fun shuffleArray(arr: IntArray) {
-    val arrLength = arr.size
-    for (i in 0 until arrLength) {
-        // Generate two random indices between 0 and arrLength-1
-        val firstIndex = randomNumber(0, arrLength - 1)
-        val secondIndex = randomNumber(0, arrLength - 1)
-        swap(arr, firstIndex, secondIndex) // Swap elements
-    }
+// Function to fill an array with random numbers
+fun fillArrayWithRandomNumbers(arr: IntArray, arrLength: Int): IntArray {
+    for (i in 0 until arrLength)
+        arr[i] = randomNumber(1, 100)
+    return arr
 }
 
 // Function to print array elements
-fun printArray(arr: IntArray) {
-    for (num in arr) {
-        print("$num ")
-    }
+fun printArray(arr: IntArray, arrLength: Int) {
+    for (i in 0 until arrLength)
+        print("${arr[i]} ")
     println()
 }
 
-// =============================
-// VERSION 2 – Kotlin Simplified Version
-// =============================
-//
-// Uses built-in Kotlin features like MutableList and shuffle()
-// to simplify the whole program.
-
-fun kotlinSimplifiedVersion() {
-    print("Enter number of elements: ")
-    val n = readln().toInt()
-
-    // Generate a list from 1 to n
-    val list = (1..n).toMutableList()
-
-    println("\nArray elements before shuffle:")
-    println(list.joinToString(" "))
-
-    // Kotlin has a built-in shuffle() function for lists
-    list.shuffle()
-
-    println("\nArray elements after shuffle:")
-    println(list.joinToString(" "))
+// Function to find the position (index) of a number in the array
+fun findNumberPositionInArray(number: Int, arr: IntArray, arrLength: Int): Int {
+    for (i in 0 until arrLength) {
+        if (arr[i] == number)
+            return i  // found → return index
+    }
+    return -1 // not found
 }
 
-// =============================
-// MAIN PROGRAM
-// =============================
+// Function to read a number from the user
+fun readNumber(): Int {
+    print("\nPlease enter a number to search for? ")
+    return readln().toInt()
+}
 
 fun main() {
-    println("==============================")
-    println("Version 1 – Step-by-Step (C++ style)")
-    println("==============================")
+    print("Enter number of elements: ")
+    val arrLength = readln().toInt().coerceIn(1, 100)
+    val arr = IntArray(100)
 
-    val arrLength = readPositiveNumber("\nEnter number of elements:")
-    val arr = fillArrayWith1ToN(arrLength)
+    fillArrayWithRandomNumbers(arr, arrLength)
 
-    println("\nArray elements before shuffle:")
-    printArray(arr)
+    println("\nArray 1 elements:")
+    printArray(arr, arrLength)
 
-    shuffleArray(arr)
+    val number = readNumber()
+    println("\nNumber you are looking for is: $number")
 
-    println("\nArray elements after shuffle:")
-    printArray(arr)
+    val numberPosition = findNumberPositionInArray(number, arr, arrLength)
 
-    println("\n\n==============================")
-    println("Version 2 – Kotlin Simplified Version")
-    println("==============================")
+    if (numberPosition == -1)
+        println("The number is not found :-(")
+    else {
+        println("The number found at position: $numberPosition")
+        println("The number found its order  : ${numberPosition + 1}")
+    }
+}
 
-    kotlinSimplifiedVersion()
+
+/* ===============================================================
+   💎 Example 2 — Professional & Idiomatic Kotlin Version
+   =============================================================== */
+
+fun main2() {
+    print("Enter number of elements: ")
+    val n = readln().toInt().coerceIn(1, 100)
+
+    // Generate list of random numbers from 1 to 100
+    val numbers = List(n) { Random.nextInt(1, 101) }
+
+    println("\nArray elements:")
+    println(numbers.joinToString(" "))
+
+    // Ask user for the number to search
+    print("\nPlease enter a number to search for: ")
+    val target = readln().toInt()
+
+    println("\nNumber you are looking for is: $target")
+
+    // Search for the number and show results
+    val index = numbers.indexOf(target)
+    if (index == -1) {
+        println("The number is not found :-(")
+    } else {
+        println("The number found at position: $index")
+        println("The number found its order  : ${index + 1}")
+    }
 }
