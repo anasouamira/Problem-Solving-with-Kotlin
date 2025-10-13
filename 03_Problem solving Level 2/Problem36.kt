@@ -1,93 +1,73 @@
-import kotlin.random.Random
+// =============================================================
+// Version 1 - Same structure as the original C++ code
+// =============================================================
 
-/* ===============================================================
-   🧩 Example 1 — Same Logic as C++ Version (Educational)
-   =============================================================== */
+import java.util.Scanner
 
-// Function to generate a random number between From and To
-fun randomNumber(from: Int, to: Int): Int {
-    return Random.nextInt(from, to + 1)
+// Function to read a number from the user
+fun readNumber(scanner: Scanner): Int {
+    print("\nPlease enter a number? ")
+    return scanner.nextInt()
 }
 
-// Function to fill an array with random numbers
-fun fillArrayWithRandomNumbers(arr: IntArray, arrLength: Int): IntArray {
-    for (i in 0 until arrLength)
-        arr[i] = randomNumber(1, 100)
-    return arr
+// Function to add an element to the array
+fun addArrayElement(number: Int, arr: IntArray, arrLength: Int): Int {
+    arr[arrLength] = number
+    return arrLength + 1
 }
 
-// Function to print array elements
+// Function to input numbers from the user
+fun inputUserNumbersInArray(scanner: Scanner, arr: IntArray): Int {
+    var arrLength = 0
+    var addMore = true
+
+    while (addMore) {
+        arrLength = addArrayElement(readNumber(scanner), arr, arrLength)
+        print("\nDo you want to add more numbers? [0]:No, [1]:Yes? ")
+        addMore = scanner.nextInt() == 1
+    }
+
+    return arrLength
+}
+
+// Function to print the array
 fun printArray(arr: IntArray, arrLength: Int) {
-    for (i in 0 until arrLength)
+    for (i in 0 until arrLength) {
         print("${arr[i]} ")
+    }
     println()
 }
 
-// Function to find the position (index) of a number in the array
-fun findNumberPositionInArray(number: Int, arr: IntArray, arrLength: Int): Int {
-    for (i in 0 until arrLength) {
-        if (arr[i] == number)
-            return i  // found → return index
-    }
-    return -1 // not found
-}
-
-// Function to read a number from the user
-fun readNumber(): Int {
-    print("\nPlease enter a number to search for? ")
-    return readln().toInt()
-}
-
 fun main() {
-    print("Enter number of elements: ")
-    val arrLength = readln().toInt().coerceIn(1, 100)
+    val scanner = Scanner(System.`in`)
     val arr = IntArray(100)
+    var arrLength = 0
 
-    fillArrayWithRandomNumbers(arr, arrLength)
+    arrLength = inputUserNumbersInArray(scanner, arr)
 
-    println("\nArray 1 elements:")
+    println("\nArray Length: $arrLength")
+    print("Array elements: ")
     printArray(arr, arrLength)
-
-    val number = readNumber()
-    println("\nNumber you are looking for is: $number")
-
-    val numberPosition = findNumberPositionInArray(number, arr, arrLength)
-
-    if (numberPosition == -1)
-        println("The number is not found :-(")
-    else {
-        println("The number found at position: $numberPosition")
-        println("The number found its order  : ${numberPosition + 1}")
-    }
 }
 
+// =============================================================
+// Version 2 - Professional Kotlin style using MutableList
+// =============================================================
 
-/* ===============================================================
-   💎 Example 2 — Professional & Idiomatic Kotlin Version
-   =============================================================== */
+fun mainV2() {
+    val numbers = mutableListOf<Int>()
 
-fun main2() {
-    print("Enter number of elements: ")
-    val n = readln().toInt().coerceIn(1, 100)
+    while (true) {
+        print("\nPlease enter a number? ")
+        val number = readln().toInt()
+        numbers.add(number)
 
-    // Generate list of random numbers from 1 to 100
-    val numbers = List(n) { Random.nextInt(1, 101) }
-
-    println("\nArray elements:")
-    println(numbers.joinToString(" "))
-
-    // Ask user for the number to search
-    print("\nPlease enter a number to search for: ")
-    val target = readln().toInt()
-
-    println("\nNumber you are looking for is: $target")
-
-    // Search for the number and show results
-    val index = numbers.indexOf(target)
-    if (index == -1) {
-        println("The number is not found :-(")
-    } else {
-        println("The number found at position: $index")
-        println("The number found its order  : ${index + 1}")
+        print("\nDo you want to add more numbers? [0]:No, [1]:Yes? ")
+        val addMore = readln().toInt()
+        if (addMore == 0) break
     }
+
+    println("\nArray Length: ${numbers.size}")
+    print("Array elements: ")
+    println(numbers.joinToString(" "))
 }
