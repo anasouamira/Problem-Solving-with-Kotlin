@@ -1,93 +1,85 @@
+// =============================================================
+// Version 1 – Same structure as the original C++ code
+// =============================================================
+
+import java.util.Scanner
 import kotlin.random.Random
 
-/* ===============================================================
-   🧩 Example 1 — Same Logic as C++ Version (Educational)
-   =============================================================== */
-
-// Function to generate a random number between From and To
+// Function to generate a random number between a range
 fun randomNumber(from: Int, to: Int): Int {
     return Random.nextInt(from, to + 1)
 }
 
 // Function to fill an array with random numbers
-fun fillArrayWithRandomNumbers(arr: IntArray, arrLength: Int): IntArray {
-    for (i in 0 until arrLength)
+fun fillArrayWithRandomNumbers(scanner: Scanner, arr: IntArray): Int {
+    print("\nEnter number of elements:\n")
+    val arrLength = scanner.nextInt()
+    for (i in 0 until arrLength) {
         arr[i] = randomNumber(1, 100)
-    return arr
+    }
+    return arrLength
 }
 
-// Function to print array elements
+// Function to print elements of an array
 fun printArray(arr: IntArray, arrLength: Int) {
-    for (i in 0 until arrLength)
+    for (i in 0 until arrLength) {
         print("${arr[i]} ")
+    }
     println()
 }
 
-// Function to find the position (index) of a number in the array
-fun findNumberPositionInArray(number: Int, arr: IntArray, arrLength: Int): Int {
-    for (i in 0 until arrLength) {
-        if (arr[i] == number)
-            return i  // found → return index
-    }
-    return -1 // not found
+// Function to add an element to the array
+fun addArrayElement(number: Int, arr: IntArray, arrLength: Int): Int {
+    arr[arrLength] = number
+    return arrLength + 1
 }
 
-// Function to read a number from the user
-fun readNumber(): Int {
-    print("\nPlease enter a number to search for? ")
-    return readln().toInt()
+// Function to copy array using addArrayElement
+fun copyArrayUsingAddArrayElement(
+    arrSource: IntArray,
+    arrDestination: IntArray,
+    arrLength: Int
+): Int {
+    var arrDestinationLength = 0
+    for (i in 0 until arrLength) {
+        arrDestinationLength = addArrayElement(arrSource[i], arrDestination, arrDestinationLength)
+    }
+    return arrDestinationLength
 }
 
 fun main() {
-    print("Enter number of elements: ")
-    val arrLength = readln().toInt().coerceIn(1, 100)
+    val scanner = Scanner(System.`in`)
     val arr = IntArray(100)
+    val arr2 = IntArray(100)
 
-    fillArrayWithRandomNumbers(arr, arrLength)
+    val arrLength = fillArrayWithRandomNumbers(scanner, arr)
+    val arr2Length = copyArrayUsingAddArrayElement(arr, arr2, arrLength)
 
     println("\nArray 1 elements:")
     printArray(arr, arrLength)
 
-    val number = readNumber()
-    println("\nNumber you are looking for is: $number")
-
-    val numberPosition = findNumberPositionInArray(number, arr, arrLength)
-
-    if (numberPosition == -1)
-        println("The number is not found :-(")
-    else {
-        println("The number found at position: $numberPosition")
-        println("The number found its order  : ${numberPosition + 1}")
-    }
+    println("\nArray 2 elements after copy:")
+    printArray(arr2, arr2Length)
 }
 
+// =============================================================
+// Version 2 – Professional Kotlin Style
+// =============================================================
 
-/* ===============================================================
-   💎 Example 2 — Professional & Idiomatic Kotlin Version
-   =============================================================== */
+fun mainV2() {
+    print("\nEnter number of elements:\n")
+    val length = readln().toInt()
 
-fun main2() {
-    print("Enter number of elements: ")
-    val n = readln().toInt().coerceIn(1, 100)
+    // Fill list with random numbers from 1 to 100
+    val list1 = List(length) { Random.nextInt(1, 101) }
 
-    // Generate list of random numbers from 1 to 100
-    val numbers = List(n) { Random.nextInt(1, 101) }
+    // Copy list1 into a new list (similar to using AddArrayElement)
+    val list2 = mutableListOf<Int>()
+    list1.forEach { list2.add(it) }
 
-    println("\nArray elements:")
-    println(numbers.joinToString(" "))
+    println("\nArray 1 elements:")
+    println(list1.joinToString(" "))
 
-    // Ask user for the number to search
-    print("\nPlease enter a number to search for: ")
-    val target = readln().toInt()
-
-    println("\nNumber you are looking for is: $target")
-
-    // Search for the number and show results
-    val index = numbers.indexOf(target)
-    if (index == -1) {
-        println("The number is not found :-(")
-    } else {
-        println("The number found at position: $index")
-        println("The number found its order  : ${index + 1}")
-    }
+    println("\nArray 2 elements after copy:")
+    println(list2.joinToString(" "))
 }
