@@ -1,77 +1,124 @@
-/*
-Problem 28 |=================================================
-Write a program to fill array with max size 100 with random
-numbers from 1 to 100, copy it to another array and print it.
-
-Input
-10
-
-Output:
-
-Array 1 elements: 1 47 51 18 85 62 51 61 82 4
-
-Array 2 elements after copy: 1 47 51 18 85 62 51 61 82 4
-=============================================================
-*/
+// ===============================================================
+// Problem 31 - Shuffle Array
+// ===============================================================
+//
+// Write a program to fill an array with ordered numbers from 1 to N,
+// then print it, shuffle the array randomly, and print it again.
+//
+// Example:
+// Input: 10
+//
+// Output:
+// Array elements before shuffle:
+// 1 2 3 4 5 6 7 8 9 10
+//
+// Array elements after shuffle:
+// 2 4 6 3 10 1 7 8 5 9
+// ===============================================================
 
 import kotlin.random.Random
 
-// ===========================================================
-// Classic Approach (Fixed Array)
-// ===========================================================
-fun randomNumberClassic(from: Int, to: Int): Int {
+// =============================
+// VERSION 1 – Step-by-Step (C++ style)
+// =============================
+
+// Function to read a positive number from the user
+fun readPositiveNumber(message: String): Int {
+    var number: Int
+    do {
+        print("$message ")
+        number = readln().toInt()
+    } while (number <= 0)
+    return number
+}
+
+// Function to swap two elements inside an array
+fun swap(arr: IntArray, i: Int, j: Int) {
+    val temp = arr[i]
+    arr[i] = arr[j]
+    arr[j] = temp
+}
+
+// Function to fill an array with ordered numbers from 1 to N
+fun fillArrayWith1ToN(arrLength: Int): IntArray {
+    val arr = IntArray(arrLength)
+    for (i in 0 until arrLength) {
+        arr[i] = i + 1 // Fill array with numbers 1, 2, 3, ..., N
+    }
+    return arr
+}
+
+// Function to generate a random number within a given range
+fun randomNumber(from: Int, to: Int): Int {
     return Random.nextInt(from, to + 1)
 }
 
-fun fillArrayClassic(arr: IntArray, arrLength: Int) {
-    for (i in 0 until arrLength) arr[i] = randomNumberClassic(1, 100)
+// Function to shuffle array elements randomly
+fun shuffleArray(arr: IntArray) {
+    val arrLength = arr.size
+    for (i in 0 until arrLength) {
+        // Generate two random indices between 0 and arrLength-1
+        val firstIndex = randomNumber(0, arrLength - 1)
+        val secondIndex = randomNumber(0, arrLength - 1)
+        swap(arr, firstIndex, secondIndex) // Swap elements
+    }
 }
 
-fun printArrayClassic(arr: IntArray, arrLength: Int) {
-    for (i in 0 until arrLength) print("${arr[i]} ")
+// Function to print array elements
+fun printArray(arr: IntArray) {
+    for (num in arr) {
+        print("$num ")
+    }
     println()
 }
 
-fun copyArrayClassic(source: IntArray, destination: IntArray, arrLength: Int) {
-    for (i in 0 until arrLength) destination[i] = source[i]
-}
+// =============================
+// VERSION 2 – Kotlin Simplified Version
+// =============================
+//
+// Uses built-in Kotlin features like MutableList and shuffle()
+// to simplify the whole program.
 
-// ===========================================================
-// Kotlin Idiomatic Approach (List)
-// ===========================================================
-fun fillList(size: Int): List<Int> {
-    return List(size) { Random.nextInt(1, 101) }
-}
+fun kotlinSimplifiedVersion() {
+    print("Enter number of elements: ")
+    val n = readln().toInt()
 
-fun printList(list: List<Int>) {
+    // Generate a list from 1 to n
+    val list = (1..n).toMutableList()
+
+    println("\nArray elements before shuffle:")
+    println(list.joinToString(" "))
+
+    // Kotlin has a built-in shuffle() function for lists
+    list.shuffle()
+
+    println("\nArray elements after shuffle:")
     println(list.joinToString(" "))
 }
 
-// ===========================================================
-// Main Function
-// ===========================================================
+// =============================
+// MAIN PROGRAM
+// =============================
+
 fun main() {
-    // Classic Approach
-    print("Enter number of elements (Classic Version): ")
-    val nClassic = readLine()?.toIntOrNull()?.coerceAtMost(100) ?: 0
-    val arrClassic = IntArray(nClassic)
-    fillArrayClassic(arrClassic, nClassic)
-    val arr2Classic = IntArray(nClassic)
-    copyArrayClassic(arrClassic, arr2Classic, nClassic)
+    println("==============================")
+    println("Version 1 – Step-by-Step (C++ style)")
+    println("==============================")
 
-    println("\nArray 1 elements:")
-    printArrayClassic(arrClassic, nClassic)
-    println("Array 2 elements after copy:")
-    printArrayClassic(arr2Classic, nClassic)
+    val arrLength = readPositiveNumber("\nEnter number of elements:")
+    val arr = fillArrayWith1ToN(arrLength)
 
-    // Kotlin Idiomatic Approach
-    print("\nEnter number of elements (Optimized Version): ")
-    val nOptimized = readLine()?.toIntOrNull()?.coerceAtMost(100) ?: 0
-    val list1 = fillList(nOptimized)
-    val list2 = list1.toList() // Copy by creating a new list
+    println("\nArray elements before shuffle:")
+    printArray(arr)
 
-    println("\nArray 1 elements:")
-    printList(list1)
-    println("Array 2 elements after copy:")
-    printList(list2)
+    shuffleArray(arr)
+
+    println("\nArray elements after shuffle:")
+    printArray(arr)
+
+    println("\n\n==============================")
+    println("Version 2 – Kotlin Simplified Version")
+    println("==============================")
+
+    kotlinSimplifiedVersion()
 }
