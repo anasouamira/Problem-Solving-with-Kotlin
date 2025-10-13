@@ -1,77 +1,89 @@
-/*
-Problem 28 |=================================================
-Write a program to fill array with max size 100 with random
-numbers from 1 to 100, copy it to another array and print it.
-
-Input
-10
-
-Output:
-
-Array 1 elements: 1 47 51 18 85 62 51 61 82 4
-
-Array 2 elements after copy: 1 47 51 18 85 62 51 61 82 4
-=============================================================
-*/
+// ================================================================
+// 🧩 Example 1 — Same logic and structure as the C++ version
+// ================================================================
 
 import kotlin.random.Random
 
-// ===========================================================
-// Classic Approach (Fixed Array)
-// ===========================================================
-fun randomNumberClassic(from: Int, to: Int): Int {
+// Function to generate a random number between 'from' and 'to'
+fun randomNumber(from: Int, to: Int): Int {
     return Random.nextInt(from, to + 1)
 }
 
-fun fillArrayClassic(arr: IntArray, arrLength: Int) {
-    for (i in 0 until arrLength) arr[i] = randomNumberClassic(1, 100)
+// Function to read a positive number from the user
+fun readPositiveNumber(message: String): Int {
+    var number: Int
+    do {
+        print("$message ")
+        number = readln().toInt()
+    } while (number <= 0)
+    return number
 }
 
-fun printArrayClassic(arr: IntArray, arrLength: Int) {
-    for (i in 0 until arrLength) print("${arr[i]} ")
+// Function to fill an array with random numbers from 1 to 100
+fun fillArrayWithRandomNumbers(arrLength: Int): IntArray {
+    val arr = IntArray(arrLength)
+    for (i in 0 until arrLength) {
+        arr[i] = randomNumber(1, 100)
+    }
+    return arr
+}
+
+// Function to compute the sum of corresponding elements in two arrays
+fun sumOfTwoArrays(arr1: IntArray, arr2: IntArray): IntArray {
+    val arrSum = IntArray(arr1.size)
+    for (i in arr1.indices) {
+        arrSum[i] = arr1[i] + arr2[i]
+    }
+    return arrSum
+}
+
+// Function to print array elements
+fun printArray(arr: IntArray) {
+    for (num in arr) print("$num ")
     println()
 }
 
-fun copyArrayClassic(source: IntArray, destination: IntArray, arrLength: Int) {
-    for (i in 0 until arrLength) destination[i] = source[i]
-}
-
-// ===========================================================
-// Kotlin Idiomatic Approach (List)
-// ===========================================================
-fun fillList(size: Int): List<Int> {
-    return List(size) { Random.nextInt(1, 101) }
-}
-
-fun printList(list: List<Int>) {
-    println(list.joinToString(" "))
-}
-
-// ===========================================================
-// Main Function
-// ===========================================================
+// Main function
 fun main() {
-    // Classic Approach
-    print("Enter number of elements (Classic Version): ")
-    val nClassic = readLine()?.toIntOrNull()?.coerceAtMost(100) ?: 0
-    val arrClassic = IntArray(nClassic)
-    fillArrayClassic(arrClassic, nClassic)
-    val arr2Classic = IntArray(nClassic)
-    copyArrayClassic(arrClassic, arr2Classic, nClassic)
+    val arrLength = readPositiveNumber("How many elements?")
+
+    val arr1 = fillArrayWithRandomNumbers(arrLength)
+    val arr2 = fillArrayWithRandomNumbers(arrLength)
+    val arrSum = sumOfTwoArrays(arr1, arr2)
 
     println("\nArray 1 elements:")
-    printArrayClassic(arrClassic, nClassic)
-    println("Array 2 elements after copy:")
-    printArrayClassic(arr2Classic, nClassic)
+    printArray(arr1)
 
-    // Kotlin Idiomatic Approach
-    print("\nEnter number of elements (Optimized Version): ")
-    val nOptimized = readLine()?.toIntOrNull()?.coerceAtMost(100) ?: 0
-    val list1 = fillList(nOptimized)
-    val list2 = list1.toList() // Copy by creating a new list
+    println("\nArray 2 elements:")
+    printArray(arr2)
+
+    println("\nSum of array1 and array2 elements:")
+    printArray(arrSum)
+}
+
+
+
+// ================================================================
+// 💎 Example 2 — Professional Kotlin Version (Functional & Elegant)
+// ================================================================
+
+fun main2() {
+    print("How many elements? ")
+    val n = readln().toInt()
+
+    // Generate two random lists of size n
+    val arr1 = List(n) { Random.nextInt(1, 101) }
+    val arr2 = List(n) { Random.nextInt(1, 101) }
+
+    // Compute element-wise sum using zip
+    val arrSum = arr1.zip(arr2) { a, b -> a + b }
 
     println("\nArray 1 elements:")
-    printList(list1)
-    println("Array 2 elements after copy:")
-    printList(list2)
+    println(arr1.joinToString(" "))
+
+    println("\nArray 2 elements:")
+    println(arr2.joinToString(" "))
+
+    println("\nSum of array1 and array2 elements:")
+    println(arrSum.joinToString(" "))
 }
