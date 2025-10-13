@@ -1,124 +1,101 @@
-// ===============================================================
-// Problem 31 - Shuffle Array
-// ===============================================================
-//
-// Write a program to fill an array with ordered numbers from 1 to N,
-// then print it, shuffle the array randomly, and print it again.
-//
-// Example:
-// Input: 10
-//
-// Output:
-// Array elements before shuffle:
-// 1 2 3 4 5 6 7 8 9 10
-//
-// Array elements after shuffle:
-// 2 4 6 3 10 1 7 8 5 9
-// ===============================================================
-
 import kotlin.random.Random
 
-// =============================
-// VERSION 1 – Step-by-Step (C++ style)
-// =============================
+/* ===============================================================
+   🧩 Example 1 — Same Methodology (as the C++ version)
+   =============================================================== */
 
-// Function to read a positive number from the user
-fun readPositiveNumber(message: String): Int {
-    var number: Int
-    do {
-        print("$message ")
-        number = readln().toInt()
-    } while (number <= 0)
-    return number
+// Enum for character types
+enum class CharType {
+    SmallLetter,
+    CapitalLetter,
+    SpecialCharacter,
+    Digit
 }
 
-// Function to swap two elements inside an array
-fun swap(arr: IntArray, i: Int, j: Int) {
-    val temp = arr[i]
-    arr[i] = arr[j]
-    arr[j] = temp
-}
-
-// Function to fill an array with ordered numbers from 1 to N
-fun fillArrayWith1ToN(arrLength: Int): IntArray {
-    val arr = IntArray(arrLength)
-    for (i in 0 until arrLength) {
-        arr[i] = i + 1 // Fill array with numbers 1, 2, 3, ..., N
-    }
-    return arr
-}
-
-// Function to generate a random number within a given range
+// Function to generate a random number between From and To
 fun randomNumber(from: Int, to: Int): Int {
     return Random.nextInt(from, to + 1)
 }
 
-// Function to shuffle array elements randomly
-fun shuffleArray(arr: IntArray) {
-    val arrLength = arr.size
+// Function to get a random character based on character type
+fun getRandomCharacter(charType: CharType): Char {
+    return when (charType) {
+        CharType.SmallLetter -> randomNumber(97, 122).toChar()
+        CharType.CapitalLetter -> randomNumber(65, 90).toChar()
+        CharType.SpecialCharacter -> randomNumber(33, 47).toChar()
+        CharType.Digit -> randomNumber(48, 57).toChar()
+    }
+}
+
+// Function to generate a random word of given length and character type
+fun generateWord(charType: CharType, length: Int): String {
+    var word = ""
+    for (i in 1..length) {
+        word += getRandomCharacter(charType)
+    }
+    return word
+}
+
+// Function to generate a key of format XXXX-XXXX-XXXX-XXXX
+fun generateKey(): String {
+    var key = ""
+    key += generateWord(CharType.CapitalLetter, 4) + "-"
+    key += generateWord(CharType.CapitalLetter, 4) + "-"
+    key += generateWord(CharType.CapitalLetter, 4) + "-"
+    key += generateWord(CharType.CapitalLetter, 4)
+    return key
+}
+
+// Function to fill an array with generated keys
+fun fillArrayWithKeys(arr: Array<String>, arrLength: Int) {
     for (i in 0 until arrLength) {
-        // Generate two random indices between 0 and arrLength-1
-        val firstIndex = randomNumber(0, arrLength - 1)
-        val secondIndex = randomNumber(0, arrLength - 1)
-        swap(arr, firstIndex, secondIndex) // Swap elements
+        arr[i] = generateKey()
     }
 }
 
-// Function to print array elements
-fun printArray(arr: IntArray) {
-    for (num in arr) {
-        print("$num ")
+// Function to print the array elements
+fun printStringArray(arr: Array<String>, arrLength: Int) {
+    println("\nArray elements:\n")
+    for (i in 0 until arrLength) {
+        println("Array[$i] : ${arr[i]}")
     }
-    println()
 }
 
-// =============================
-// VERSION 2 – Kotlin Simplified Version
-// =============================
-//
-// Uses built-in Kotlin features like MutableList and shuffle()
-// to simplify the whole program.
-
-fun kotlinSimplifiedVersion() {
-    print("Enter number of elements: ")
-    val n = readln().toInt()
-
-    // Generate a list from 1 to n
-    val list = (1..n).toMutableList()
-
-    println("\nArray elements before shuffle:")
-    println(list.joinToString(" "))
-
-    // Kotlin has a built-in shuffle() function for lists
-    list.shuffle()
-
-    println("\nArray elements after shuffle:")
-    println(list.joinToString(" "))
+// Function to read a positive number
+fun readPositiveNumber(message: String): Int {
+    var number: Int
+    do {
+        print(message)
+        number = readln().toIntOrNull() ?: 0
+    } while (number <= 0)
+    return number
 }
-
-// =============================
-// MAIN PROGRAM
-// =============================
 
 fun main() {
-    println("==============================")
-    println("Version 1 – Step-by-Step (C++ style)")
-    println("==============================")
+    val arr = Array(100) { "" }
+    val arrLength = readPositiveNumber("How many keys do you want to generate? ")
 
-    val arrLength = readPositiveNumber("\nEnter number of elements:")
-    val arr = fillArrayWith1ToN(arrLength)
+    fillArrayWithKeys(arr, arrLength)
+    printStringArray(arr, arrLength)
+}
 
-    println("\nArray elements before shuffle:")
-    printArray(arr)
 
-    shuffleArray(arr)
+/* ===============================================================
+   💎 Example 2 — Professional & Idiomatic Kotlin Version
+   =============================================================== */
 
-    println("\nArray elements after shuffle:")
-    printArray(arr)
+fun main2() {
+    print("How many keys do you want to generate? ")
+    val count = readln().toInt().coerceIn(1, 100)
 
-    println("\n\n==============================")
-    println("Version 2 – Kotlin Simplified Version")
-    println("==============================")
+    // Helper lambda to generate one section of key
+    val section = { (1..4).map { ('A'..'Z').random() }.joinToString("") }
 
-    kotlinSimplifiedVersion()
+    // Generate list of formatted keys
+    val keys = List(count) { List(4) { section() }.joinToString("-") }
+
+    println("\nArray elements:\n")
+    keys.forEachIndexed { index, key ->
+        println("Array[$index] : $key")
+    }
 }
