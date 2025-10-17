@@ -1,85 +1,79 @@
-// =============================================================
-// Version 1 – Same structure as the original C++ code
-// =============================================================
+/*
+Problem 40 |=================================================
+Write a program to fill an array with numbers, 
+then print distinct numbers to another array.
 
-import java.util.Scanner
-import kotlin.random.Random
+Output:
 
-// Function to generate a random number between a range
-fun randomNumber(from: Int, to: Int): Int {
-    return Random.nextInt(from, to + 1)
+Array 1 elements:
+10 10 10 50 50 70 70 70 70 90
+
+Array 2 distinct elements:
+10 50 70 90
+=============================================================
+*/
+
+/* =============================== Version 1 (Educational) =============================== */
+
+// Function to fill the array with predefined numbers
+fun fillArray(): IntArray {
+    // Fixed 10 elements as given in the problem
+    return intArrayOf(10, 10, 10, 50, 50, 70, 70, 70, 70, 90)
 }
 
-// Function to fill an array with random numbers
-fun fillArrayWithRandomNumbers(scanner: Scanner, arr: IntArray): Int {
-    print("\nEnter number of elements:\n")
-    val arrLength = scanner.nextInt()
-    for (i in 0 until arrLength) {
-        arr[i] = randomNumber(1, 100)
-    }
-    return arrLength
-}
-
-// Function to print elements of an array
-fun printArray(arr: IntArray, arrLength: Int) {
-    for (i in 0 until arrLength) {
-        print("${arr[i]} ")
+// Function to print array elements
+fun printArray(arr: IntArray) {
+    for (num in arr) {
+        print("$num ")
     }
     println()
 }
 
-// Function to add an element to the array
-fun addArrayElement(number: Int, arr: IntArray, arrLength: Int): Int {
-    arr[arrLength] = number
-    return arrLength + 1
+// Function to check if a number exists in an array
+fun isNumberInArray(number: Int, arr: IntArray): Boolean {
+    // Returns true if the number is found
+    for (n in arr) {
+        if (n == number)
+            return true
+    }
+    return false
 }
 
-// Function to copy array using addArrayElement
-fun copyArrayUsingAddArrayElement(
-    arrSource: IntArray,
-    arrDestination: IntArray,
-    arrLength: Int
-): Int {
-    var arrDestinationLength = 0
-    for (i in 0 until arrLength) {
-        arrDestinationLength = addArrayElement(arrSource[i], arrDestination, arrDestinationLength)
+// Function to add a number to a mutable list (acts as dynamic array)
+fun addArrayElement(number: Int, list: MutableList<Int>) {
+    list.add(number) // Add the number at the end of the list
+}
+
+// Function to copy only distinct numbers to a new array
+fun copyDistinctNumbers(source: IntArray): IntArray {
+    val destination = mutableListOf<Int>() // Empty list for distinct elements
+    for (num in source) {
+        if (!isNumberInArray(num, destination.toIntArray())) {
+            addArrayElement(num, destination)
+        }
     }
-    return arrDestinationLength
+    return destination.toIntArray() // Convert list back to IntArray
 }
 
 fun main() {
-    val scanner = Scanner(System.`in`)
-    val arr = IntArray(100)
-    val arr2 = IntArray(100)
+    val source = fillArray()
+    println("Array 1 elements:")
+    printArray(source)
 
-    val arrLength = fillArrayWithRandomNumbers(scanner, arr)
-    val arr2Length = copyArrayUsingAddArrayElement(arr, arr2, arrLength)
+    val distinct = copyDistinctNumbers(source)
+    println("\nArray 2 distinct elements:")
+    printArray(distinct)
 
-    println("\nArray 1 elements:")
-    printArray(arr, arrLength)
+    /* =============================== Version 2 (Professional) =============================== */
 
-    println("\nArray 2 elements after copy:")
-    printArray(arr2, arr2Length)
-}
+    println("\n--- Optimized Professional Version ---")
 
-// =============================================================
-// Version 2 – Professional Kotlin Style
-// =============================================================
-
-fun mainV2() {
-    print("\nEnter number of elements:\n")
-    val length = readln().toInt()
-
-    // Fill list with random numbers from 1 to 100
-    val list1 = List(length) { Random.nextInt(1, 101) }
-
-    // Copy list1 into a new list (similar to using AddArrayElement)
-    val list2 = mutableListOf<Int>()
-    list1.forEach { list2.add(it) }
+    val arr1 = intArrayOf(10, 10, 10, 50, 50, 70, 70, 70, 70, 90)
+    val arr2 = arr1.distinct() // Built-in function returns only unique values
 
     println("\nArray 1 elements:")
-    println(list1.joinToString(" "))
+    println(arr1.joinToString(" "))
 
-    println("\nArray 2 elements after copy:")
-    println(list2.joinToString(" "))
+    println("\nArray 2 distinct elements:")
+    println(arr2.joinToString(" "))
 }
