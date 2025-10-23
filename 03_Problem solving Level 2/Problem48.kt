@@ -1,64 +1,55 @@
-/*
-Problem 48 |=================================================
-Write a program to print floor of numbers , don't use built in
-floor function 
+// ===============================================================
+// Problem 48 | Custom Floor Function without using built-in floor()
+// ===============================================================
 
-Input: 
-10.7
-
-Output: 
-My Round Result : 10 
-C++ Round Result: 10
-
-Input:
-10.3
-
-Output:
-My Round Result : 10
-C++ Round Result: 10
-
-Input:
--10.3
-
-Output:
-My Round Result : -11
-C++ Round Result: -11
-=============================================================
-*/
-#include <iostream>
-using namespace std;
+import kotlin.math.floor
 
 // Function to find the floor of a floating-point number
-// Floor of a number is the greatest integer less than or equal to the number
-int MyFloor(float Number)
-{
-    // If the number is positive, the floor is simply the integer part
-    if (Number > 0)
-        return int(Number);
+// Floor of a number = greatest integer less than or equal to the number
+fun myFloor(number: Float): Int {
+    // If number is positive, floor is the integer part
+    return if (number > 0)
+        number.toInt()
+    else {
+        // If negative and not exact integer, subtract 1
+        if (number == number.toInt().toFloat())
+            number.toInt() // exact integer case
+        else
+            number.toInt() - 1
+    }
+}
+
+// Function to read a floating-point number from user
+fun readNumber(): Float {
+    print("Please enter a number: ")
+    return readLine()!!.toFloat()
+}
+
+fun main() {
+    // Read number from user
+    val number = readNumber()
+
+    // Display result using custom floor function
+    println("My Floor Result  : ${myFloor(number)}")
+
+    // Display result using built-in Kotlin floor() function
+    println("Kotlin floor Result: ${floor(number)}")
+
+    // ==============================================================
+    // Kotlin Professional Version (concise & expressive)
+    // ==============================================================
+
+    println("\n================ Kotlin Professional Version ================\n")
+
+    print("Enter a number: ")
+    val input = readLine()!!.toFloat()
+
+    // One-line custom floor using expression body
+    val customFloor = if (input >= 0 || input == input.toInt().toFloat())
+        input.toInt()
     else
-        // If the number is negative and not an exact integer, subtract 1
-        return int(Number) - 1;
-}
+        input.toInt() - 1
 
-// Function to read a floating-point number from the user
-float ReadNumber()
-{
-    float Number;
-    cout << "Please enter a number? ";
-    cin >> Number;
-    return Number;
-}
-
-int main()
-{
-    // Read the number from the user
-    float Number = ReadNumber();
-
-    // Display the result of custom floor calculation using MyFloor()
-    cout << "My MyFloor Result : " << MyFloor(Number) << endl;
-
-    // Display the result of standard C++ floor calculation using floor()
-    cout << "C++ floor Result  : " << floor(Number) << endl;
-
-    return 0;
+    println("My Floor Result  : $customFloor")
+    println("Kotlin floor Result: ${floor(input)}")
 }
