@@ -2,66 +2,38 @@
 // Example 1 : Same procedural style as the C++ version
 // ==========================================================
 
-import kotlin.random.Random
+import kotlin.math.abs
 
-// Function to generate a random number between From and To (inclusive)
-fun randomNumber(from: Int, to: Int): Int {
-    return Random.nextInt(from, to + 1)
+// Function to calculate the absolute value of a number manually
+fun myAbs(number: Float): Float {
+    return if (number > 0) number else number * -1
 }
 
-// Function to fill the array with random numbers
-fun fillArrayWithRandomNumbers(arr: IntArray, arrLength: Int): IntArray {
-    for (i in 0 until arrLength) {
-        arr[i] = randomNumber(-100, 100)
-    }
-    return arr
-}
-
-// Function to print the elements of the array
-fun printArray(arr: IntArray, arrLength: Int) {
-    for (i in 0 until arrLength) {
-        print("${arr[i]} ")
-    }
-    println()
-}
-
-// Function to count the number of positive numbers (including zero)
-fun positiveCount(arr: IntArray, arrLength: Int): Int {
-    var counter = 0
-    for (i in 0 until arrLength) {
-        if (arr[i] >= 0) counter++
-    }
-    return counter
+// Function to read a number from the user
+fun readNumber(): Float {
+    print("Please enter a number: ")
+    return readLine()!!.toFloat()
 }
 
 fun main() {
-    println("Enter number of elements:")
-    val arrLength = readLine()!!.toInt()
-    val arr = IntArray(100)
+    // --- First version (same as C++ logic) ---
+    val number = readNumber()
 
-    fillArrayWithRandomNumbers(arr, arrLength)
-
-    println("\nArray Elements:")
-    printArray(arr, arrLength)
-
-    println("\nPositive Numbers count is: ${positiveCount(arr, arrLength)}")
+    println("My abs Result : ${myAbs(number)}")
+    println("Kotlin abs Result: ${abs(number)}")
 
     // ==========================================================
     // Example 2 : Professional Kotlin version (modern & clean)
     // ==========================================================
     println("\n================ Kotlin Professional Version ================\n")
 
-    print("Enter number of elements: ")
-    val size = readLine()!!.toInt()
+    print("Enter a number: ")
+    val input = readLine()!!.toFloat()
 
-    // Create and fill list with random numbers in the range -100..100
-    val numbers = List(size) { Random.nextInt(-100, 101) }
+    // Manual abs using a single expression (expression body)
+    val customAbs = if (input >= 0) input else -input
 
-    // Print the list elements
-    println("Array Elements: ${numbers.joinToString(" ")}")
-
-    // Count positive numbers using filter and count
-    val positiveCount = numbers.count { it >= 0 }
-
-    println("Positive Numbers count is: $positiveCount")
+    // Print both results using string interpolation
+    println("My abs Result : $customAbs")
+    println("Kotlin abs Result: ${abs(input)}")
 }
