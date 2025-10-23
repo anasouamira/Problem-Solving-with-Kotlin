@@ -1,30 +1,37 @@
 /*
-Problem 41 |=================================================
-Write a program to fill array with numbers, then check if it is a Palindrome
-array or not. Note: Palindrome array can be read the same from right to
-left and from left to right.
+Problem 42 |=================================================
+Write a program to fill array with max size 100 with random
+numbers from 1 to 100, then print the count of Odd numbers.
 
 Input:
-10 20 30 30 20 10
+10
 
 Output:
-
-Array Elements:
-10 20 30 30 20 10
-
-Yes, array is Palindrome
+Array Elements: 60 78 15 49 56 6 4 3 21 23
+Odd Numbers count is: 5
 =============================================================
 */
 
 /* ========================= Version 1 (Educational) ========================= */
 
-// Function to fill the array with predefined elements
-fun fillArray(): IntArray {
-    // Array initialized with the example values
-    return intArrayOf(10, 20, 30, 30, 20, 10)
+import kotlin.random.Random
+
+// Function to generate a random number between two limits
+fun randomNumber(from: Int, to: Int): Int {
+    // Returns a random integer between [from, to]
+    return Random.nextInt(from, to + 1)
 }
 
-// Function to print the elements of the array
+// Function to fill an array with random numbers
+fun fillArrayWithRandomNumbers(size: Int): IntArray {
+    val arr = IntArray(size)
+    for (i in arr.indices) {
+        arr[i] = randomNumber(1, 100)
+    }
+    return arr
+}
+
+// Function to print array elements
 fun printArray(arr: IntArray) {
     for (num in arr) {
         print("$num ")
@@ -32,41 +39,40 @@ fun printArray(arr: IntArray) {
     println()
 }
 
-// Function to check if an array is palindrome
-fun isPalindromeArray(arr: IntArray): Boolean {
-    val length = arr.size
-    // Compare from both ends moving toward the center
-    for (i in 0 until length / 2) {
-        if (arr[i] != arr[length - i - 1]) {
-            return false // Mismatch found
-        }
+// Function to count odd numbers in array
+fun oddCount(arr: IntArray): Int {
+    var counter = 0
+    for (num in arr) {
+        if (num % 2 != 0) // Check if number is odd
+            counter++
     }
-    return true // All matched => Palindrome
+    return counter
 }
 
+// Main function
 fun main() {
-    val arr = fillArray()
+    print("Enter number of elements: ")
+    val arrLength = readLine()!!.toInt()
 
-    println("Array Elements:")
+    val arr = fillArrayWithRandomNumbers(arrLength)
+
+    println("\nArray Elements:")
     printArray(arr)
 
-    if (isPalindromeArray(arr))
-        println("\nYes, array is Palindrome")
-    else
-        println("\nNo, array is NOT Palindrome")
+    println("\nOdd Numbers count is: ${oddCount(arr)}")
 
     /* ========================= Version 2 (Professional) ========================= */
 
     println("\n--- Optimized Professional Version ---")
 
-    val arr2 = intArrayOf(10, 20, 30, 30, 20, 10)
-    val isPalindrome = arr2.contentEquals(arr2.reversedArray())
+    print("Enter number of elements: ")
+    val n = readLine()!!.toInt()
+
+    val arr2 = IntArray(n) { Random.nextInt(1, 101) }
 
     println("\nArray Elements:")
     println(arr2.joinToString(" "))
 
-    println(
-        if (isPalindrome) "\nYes, array is Palindrome"
-        else "\nNo, array is NOT Palindrome"
-    )
+    val oddCount = arr2.count { it % 2 != 0 }
+    println("\nOdd Numbers count is: $oddCount")
 }
