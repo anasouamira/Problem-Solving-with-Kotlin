@@ -1,125 +1,66 @@
-/*
-Problem08 |============================================================
-
-Write a program to read a number and a digit,
-then print the frequency of that digit inside the number.
-
-Input:
-1223222
-2
-
-Output:
-Digit 2 Frequency is 5 Time(s).
-
-======================================================================
-*/
-
-import kotlin.math.*
-
-// ===========================================================
-// Example 1 — Classic style (Direct C++ translation)
-// ===========================================================
-
-/**
- * Data class equivalent to C++ struct.
- * It holds both the number and the digit to search for.
- */
-data class NumberDigit(val number: Int, val digit: Int)
-
-/**
- * Reads a positive number and a single digit (0–9) from the user.
- * Keeps asking until valid inputs are entered.
- */
-fun readNumberAndDigitClassic(): NumberDigit {
-    var number: Int
-    var digit: Int
-
-    do {
-        print("Enter a positive number: ")
-        number = readLine()?.toIntOrNull() ?: -1
-
-        print("Enter a single digit (0–9): ")
-        digit = readLine()?.toIntOrNull() ?: -1
-    } while (number < 0 || digit < 0 || digit > 9)
-
-    return NumberDigit(number, digit)
-}
-
-/**
- * Counts how many times a given digit appears inside a given number.
- * Uses modulo (%) and integer division (/) like in the C++ version.
- */
-fun digitFrequencyClassic(data: NumberDigit): Int {
-    var temp = data.number
-    var remainder: Int
-    var count = 0
-
-    do {
-        remainder = temp % 10         // Extract last digit
-        temp /= 10                    // Remove last digit
-        if (remainder == data.digit)
-            count++                   // Increment count if matched
-    } while (temp > 0)
-
-    return count
-}
-
-/**
- * Prints result for the classic method.
- */
-fun printDigitFrequencyClassic() {
-    val data = readNumberAndDigitClassic()
-    val frequency = digitFrequencyClassic(data)
-    println("Digit ${data.digit} Frequency is $frequency Time(s).")
-}
-
-
-// ===========================================================
-// Example 2 — Optimized professional Kotlin version
-// ===========================================================
-
-/**
- * Reads a positive integer with a message prompt.
- * Keeps asking until the input is valid.
- */
-fun readPositiveInt(message: String): Int {
-    var value: Int?
-    do {
-        print(message)
-        value = readLine()?.toIntOrNull()
-    } while (value == null || value < 0)
-    return value
-}
-
-/**
- * Optimized function to count digit frequency using string processing.
- * Converts the number to a string and counts occurrences of the digit.
- */
-fun digitFrequencyOptimized(number: Int, digit: Int): Int {
-    val digitChar = digit.toString().single()           // Convert digit to Char
-    return number.toString().count { it == digitChar }  // Count matching characters
-}
-
-/**
- * Prints result for the optimized method.
- */
-fun printDigitFrequencyOptimized() {
-    val number = readPositiveInt("Enter a positive number: ")
-    val digit = readPositiveInt("Enter a single digit (0–9): ").coerceIn(0, 9)
-
-    val frequency = digitFrequencyOptimized(number, digit)
-
-    println("Digit $digit Frequency is $frequency Time(s).")
-}
-
-
-// ===========================================================
-// Main function — Runs both examples sequentially
-// ===========================================================
 fun main() {
-    println("===== Example 1: Classic C++ Methodology =====")
-    printDigitFrequencyClassic()
+    println("========= Version 1: Beginner Level =========")
 
-    println("\n===== Example 2: Optimized Kotlin Version =====")
-    printDigitFrequencyOptimized()
+    val rows = 3
+    val cols = 3
+    val matrix1 = Array(rows) { IntArray(cols) }
+    val matrix2 = Array(rows) { IntArray(cols) }
+    val resultMatrix = Array(rows) { IntArray(cols) }
+
+    // Fill matrices with random numbers from 1 to 10
+    fun fillMatrixRandom(matrix: Array<IntArray>) {
+        for (i in 0 until rows) {
+            for (j in 0 until cols) {
+                matrix[i][j] = (1..10).random()
+            }
+        }
+    }
+
+    // Print a matrix
+    fun printMatrix(matrix: Array<IntArray>) {
+        for (i in 0 until rows) {
+            for (j in 0 until cols) {
+                print(String.format("%02d ", matrix[i][j]))
+            }
+            println()
+        }
+    }
+
+    // Multiply matrices element by element
+    fun multiplyMatrixElementwise(m1: Array<IntArray>, m2: Array<IntArray>, result: Array<IntArray>) {
+        for (i in 0 until rows) {
+            for (j in 0 until cols) {
+                result[i][j] = m1[i][j] * m2[i][j]
+            }
+        }
+    }
+
+    fillMatrixRandom(matrix1)
+    fillMatrixRandom(matrix2)
+
+    println("\nMatrix1:")
+    printMatrix(matrix1)
+
+    println("\nMatrix2:")
+    printMatrix(matrix2)
+
+    multiplyMatrixElementwise(matrix1, matrix2, resultMatrix)
+    println("\nResults:")
+    printMatrix(resultMatrix)
+
+    println("\n========= Version 2: Professional Level =========")
+
+    // Professional approach using Kotlin functional constructs
+    val matrixA = Array(3) { IntArray(3) { (1..10).random() } }
+    val matrixB = Array(3) { IntArray(3) { (1..10).random() } }
+    val resultAB = Array(3) { i -> IntArray(3) { j -> matrixA[i][j] * matrixB[i][j] } }
+
+    println("\nMatrix1:")
+    matrixA.forEach { row -> println(row.joinToString(" ") { "%02d".format(it) }) }
+
+    println("\nMatrix2:")
+    matrixB.forEach { row -> println(row.joinToString(" ") { "%02d".format(it) }) }
+
+    println("\nResults:")
+    resultAB.forEach { row -> println(row.joinToString(" ") { "%02d".format(it) }) }
 }
