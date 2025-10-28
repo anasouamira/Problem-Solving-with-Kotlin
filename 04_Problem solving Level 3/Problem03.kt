@@ -1,119 +1,95 @@
-// 🔹 Problem: Check if a number is perfect
-// Provide two versions in one file:
-// - Example 1: Direct translation that preserves the original C++ methodology (enum, check up to n/2).
-// - Example 2: Professional/optimized version using sqrt and an efficient proper-divisors summation.
+// ===============================================================
+// Problem 03 | Fill 3x3 Matrix, Sum Each Row in Separate Array
+// ===============================================================
 
-import kotlin.math.sqrt
+import kotlin.random.Random
 
-// ===========================================================
-// Example 1 — Classic style (preserve C++ methodology)
-// ===========================================================
+// -------------------- VERSION 1 (Educational) --------------------
 
-/**
- * Enum to represent whether a divisor check returns Divisor or NotDivisor.
- * This mirrors the C++ enum enmDivisorNotDivisor.
- */
-enum class DivisorStatus { Divisor, NotDivisor }
-
-/**
- * Read a non-negative integer from the user.
- * Mirrors the original C++ loop that repeats while input < 0.
- */
-fun readPositiveNumberClassic(message: String): Int {
-    var number: Int
-    do {
-        print(message)
-        number = readLine()?.toIntOrNull() ?: Int.MIN_VALUE
-    } while (number < 0)
-    return number
+// Function to generate a random number between From and To (inclusive)
+fun randomNumber(from: Int, to: Int): Int {
+    return Random.nextInt(from, to + 1)
 }
 
-/**
- * Check whether 'divisor' divides 'number'.
- * Returns DivisorStatus.Divisor when number % divisor == 0.
- * This keeps the original separation of concerns (ChekDivisors).
- */
-fun checkDivisors(number: Int, divisor: Int): DivisorStatus {
-    return if (number % divisor == 0) DivisorStatus.Divisor else DivisorStatus.NotDivisor
+// Function to fill a 3x3 matrix with random numbers from 1 to 100
+fun fillMatrixWithRandomNumbers(matrix: Array<IntArray>, rows: Int, cols: Int) {
+    for (i in 0 until rows) {
+        for (j in 0 until cols) {
+            matrix[i][j] = randomNumber(1, 100)
+        }
+    }
 }
 
-/**
- * Check perfectness using the naive method: sum proper divisors from 1 to n/2.
- * Returns true when sum of proper divisors equals the number.
- * Mirrors original C++ logic exactly (loop to n/2).
- */
-fun isPerfectClassic(number: Int): Boolean {
-    if (number <= 1) return false // 0 and 1 are not considered perfect here (consistent with usual definition)
-    val limit = number / 2
+// Function to print the matrix with aligned columns
+fun printMatrix(matrix: Array<IntArray>, rows: Int, cols: Int) {
+    for (i in 0 until rows) {
+        for (j in 0 until cols) {
+            // "%3d" ensures proper spacing for readability
+            print("%3d ".format(matrix[i][j]))
+        }
+        println()
+    }
+}
+
+// Function to calculate the sum of one specific row
+fun rowSum(matrix: Array<IntArray>, rowNumber: Int, cols: Int): Int {
     var sum = 0
-    for (d in 1..limit) {
-        if (checkDivisors(number, d) == DivisorStatus.Divisor) {
-            sum += d
-        }
+    for (j in 0 until cols) {
+        sum += matrix[rowNumber][j]
     }
-    return sum == number
+    return sum
 }
 
-/**
- * Print result for the classic approach.
- */
-fun printPerfectClassic(number: Int) {
-    if (isPerfectClassic(number)) println("$number is Perfect.") else println("$number is not Perfect.")
-}
-
-
-// ===========================================================
-// Example 2 — Optimized / Professional version
-// ===========================================================
-
-/**
- * Optimized check for perfect number using divisors up to sqrt(n)
- * and adding pairs (i and n/i) to the sum of proper divisors.
- *
- * This runs in O(sqrt(n)) time and is the standard efficient approach.
- */
-fun isPerfectOptimized(n: Int): Boolean {
-    if (n <= 1) return false
-
-    var sum = 1 // 1 is a proper divisor for n > 1
-    val limit = sqrt(n.toDouble()).toInt()
-
-    for (i in 2..limit) {
-        if (n % i == 0) {
-            val other = n / i
-            sum += i
-            if (other != i) sum += other
-        }
+// Function to fill an array with the sum of each row
+fun sumMatrixRowsInArray(matrix: Array<IntArray>, rowSums: IntArray, rows: Int, cols: Int) {
+    for (i in 0 until rows) {
+        rowSums[i] = rowSum(matrix, i, cols)
     }
-    return sum == n
 }
 
-/**
- * Print result for the optimized approach.
- */
-fun printPerfectOptimized(number: Int) {
-    if (isPerfectOptimized(number)) println("$number is Perfect. (optimized)") 
-    else println("$number is not Perfect. (optimized)")
+// Function to print the sums stored in a separate array
+fun printRowsSumArray(rowSums: IntArray, rows: Int) {
+    println("\nThe following are the sums of each row in the matrix:")
+    for (i in 0 until rows) {
+        println(" Row ${i + 1} Sum = ${rowSums[i]}")
+    }
 }
 
-
-// ===========================================================
-// Main — read input once and run both examples
-// ===========================================================
 fun main() {
-    // Read a non-negative integer from the user (allow 0 and positive numbers)
-    val number = run {
-        var n: Int?
-        do {
-            print("Enter a positive number to check if it is perfect or not: ")
-            n = readLine()?.toIntOrNull()
-        } while (n == null || n < 0)
-        n
+    // ----------------- Educational Version -----------------
+    println("The following is a 3x3 random matrix:\n")
+
+    // Declare a 3x3 matrix
+    val matrix = Array(3) { IntArray(3) }
+
+    // Fill and print the matrix
+    fillMatrixWithRandomNumbers(matrix, 3, 3)
+    printMatrix(matrix, 3, 3)
+
+    // Prepare array to store row sums
+    val rowSums = IntArray(3)
+
+    // Compute and print row sums
+    sumMatrixRowsInArray(matrix, rowSums, 3, 3)
+    printRowsSumArray(rowSums, 3)
+
+    // ----------------- Professional Kotlin Version -----------------
+    println("\n=========== Kotlin Professional Version ===========\n")
+
+    // Create 3x3 matrix filled with random numbers (1..100)
+    val proMatrix = Array(3) { IntArray(3) { Random.nextInt(1, 101) } }
+
+    // Print matrix neatly
+    proMatrix.forEach { row ->
+        println(row.joinToString("  ") { "%3d".format(it) })
     }
 
-    // Example 1 — same methodology as the C++ code
-    printPerfectClassic(number)
+    // Create new array with row sums using map
+    val proRowSums = proMatrix.map { row -> row.sum() }
 
-    // Example 2 — optimized professional version
-    printPerfectOptimized(number)
+    // Print row sums
+    println("\nRow sums:")
+    proRowSums.forEachIndexed { index, sum ->
+        println(" Row ${index + 1} Sum = $sum")
+    }
 }
