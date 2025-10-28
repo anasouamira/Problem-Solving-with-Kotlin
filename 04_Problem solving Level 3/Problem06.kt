@@ -1,66 +1,49 @@
-// 🔹 Problem06: Read a number and print the sum of its digits
-// This file includes two examples:
-// Example 1 → Classic translation from C++ (same logic step-by-step)
-// Example 2 → Professional Kotlin version (concise and idiomatic)
-
-
-// ===========================================================
-// Example 1 — Classic translation from the C++ methodology
-// ===========================================================
-
-/**
- * Reads a positive integer from the user.
- * Keeps asking until a non-negative number is entered.
- */
-fun readPositiveNumberClassic(message: String): Int {
-    var number: Int
-    do {
-        print(message)
-        number = readLine()?.toIntOrNull() ?: -1
-    } while (number < 0)
-    return number
-}
-
-/**
- * Calculates and prints the sum of digits using arithmetic operations.
- */
-fun printSumOfDigitsClassic(number: Int) {
-    var num = number
-    var sum = 0
-
-    do {
-        val remainder = num % 10  // Extract the last digit
-        sum += remainder          // Add it to the sum
-        num /= 10                 // Remove the last digit
-    } while (num > 0)
-
-    println("Sum of digits (classic method): $sum")
-}
-
-
-// ===========================================================
-// Example 2 — Professional idiomatic Kotlin version
-// ===========================================================
-
-/**
- * Calculates the sum of digits using functional Kotlin features.
- */
-fun printSumOfDigitsOptimized(number: Int) {
-    val sum = number.toString().sumOf { it.digitToInt() }
-    println("Sum of digits (optimized Kotlin method): $sum")
-}
-
-
-// ===========================================================
-// Main function
-// ===========================================================
-
 fun main() {
-    val number = readPositiveNumberClassic("Enter a positive number to calculate the sum of its digits: ")
+    println("========= Version 1: Beginner Level =========")
 
-    // Example 1: C++-style logic
-    printSumOfDigitsClassic(number)
+    // ---------- VERSION 1: SIMPLE STEP BY STEP ----------
+    val rows = 3
+    val cols = 3
+    val matrix = Array(rows) { IntArray(cols) } // Create a 3x3 matrix
 
-    // Example 2: Professional Kotlin-style solution
-    printSumOfDigitsOptimized(number)
+    // Function to fill the matrix with ordered numbers starting from 1
+    fun fillMatrixOrdered() {
+        var counter = 1
+        for (i in 0 until rows) {
+            for (j in 0 until cols) {
+                matrix[i][j] = counter
+                counter++ // Increase by 1 each step
+            }
+        }
+    }
+
+    // Function to print matrix elements
+    fun printMatrix() {
+        println("The following is a 3x3 ordered matrix:\n")
+        for (i in 0 until rows) {
+            for (j in 0 until cols) {
+                print("${matrix[i][j].toString().padStart(2, ' ')} ")
+            }
+            println()
+        }
+    }
+
+    // Run the simple version
+    fillMatrixOrdered()
+    printMatrix()
+
+
+    println("\n========= Version 2: Professional Level =========")
+
+    // ---------- VERSION 2: PROFESSIONAL AND CLEAN ----------
+    // Fill the matrix directly with ordered numbers using a functional approach
+    val matrix2 = Array(3) { i ->
+        IntArray(3) { j -> i * 3 + j + 1 } // Formula to fill sequentially
+    }
+
+    // Print the matrix in a clean format
+    println("\nThe following is a 3x3 ordered matrix:\n")
+    matrix2.forEach { row ->
+        println(row.joinToString(" ") { it.toString().padStart(2, ' ') })
+    }
 }
