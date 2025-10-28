@@ -1,100 +1,57 @@
-// 🔹 Question / Task:
-// Print the multiplication table from 1 to 10 in a tabular form.
-// Provide two versions:
-// - Example 1: Direct translation that preserves the original C++ methodology/structure.
-// - Example 2: A more professional / idiomatic Kotlin version with improved alignment.
+// ===============================================================
+// Problem 01 | Fill a 3x3 Matrix with Random Numbers
+// ===============================================================
 
-// -----------------------------------------------------------
-// Example 1 — Direct translation of the C++ methodology
-// -----------------------------------------------------------
+import kotlin.random.Random
 
-/*
-  Notes:
-  - Keep the same function names and structure as the C++ code:
-    PrintTableHeader(), ColumnSeparator(), PrintMultiplicationTable(), main()
-  - Use \t (tabs) for spacing like the original.
-  - All explanatory comments are in English (as requested).
-*/
+// -------------------- VERSION 1 (Educational) --------------------
 
-fun PrintTableHeader() {
-    println("\n\n\t\t\t Multiplication Table From 1 to 10\n")
-    print("\t")
-    for (i in 1..10) {
-        print("$i\t")
-    }
-    println()
-    println("___________________________________________________________________________________")
+// Function to generate a random number between From and To
+fun randomNumber(from: Int, to: Int): Int {
+    return Random.nextInt(from, to + 1)
 }
 
-fun ColumnSeparator(i: Int): String {
-    // Return a separator string similar to the original C++ logic.
-    // This keeps the visual alignment approach used before.
-    return if (i < 10) "   |" else "  |"
-}
-
-fun PrintMultiplicationTable() {
-    PrintTableHeader()
-    for (i in 1..10) {
-        // Print row label and separator, then the row values separated by tabs.
-        print(" $i${ColumnSeparator(i)}\t")
-        for (j in 1..10) {
-            print("${i * j}\t")
+// Function to fill a 3x3 matrix with random numbers between 1 and 100
+fun fillMatrixWithRandomNumbers(matrix: Array<IntArray>, rows: Int, cols: Int) {
+    for (i in 0 until rows) {
+        for (j in 0 until cols) {
+            matrix[i][j] = randomNumber(1, 100)
         }
-        println()
     }
 }
 
-// -----------------------------------------------------------
-// Example 2 — Professional / idiomatic Kotlin version
-// -----------------------------------------------------------
-
-/*
-  Improvements in Example 2:
-  - Use fixed column widths and String.padStart to guarantee alignment regardless of number width.
-  - Make header generation and separator dynamic but still produce a neat table like the sample.
-  - Keep code concise and readable while improving output alignment.
-*/
-
-fun printTableHeaderProfessional(size: Int, cellWidth: Int) {
-    // Title centered roughly for console output (simple approach).
-    println("\n\n${"Multiplication Table From 1 to $size".padStart((size * cellWidth) / 2 + 10)}\n")
-    // Print top header row (numbers 1..size)
-    print(" ".repeat(cellWidth)) // space for the row labels column
-    for (i in 1..size) {
-        print(i.toString().padStart(cellWidth))
-    }
-    println()
-    // Print a separator line based on table width
-    println("-".repeat(cellWidth * (size + 1)))
-}
-
-fun printMultiplicationTableProfessional(size: Int = 10) {
-    val cellWidth = 6 // fixed width for each column (adjust for larger tables)
-    printTableHeaderProfessional(size, cellWidth)
-
-    for (i in 1..size) {
-        // Row label (left column) with separator
-        val rowLabel = i.toString().padStart(3)
-        print("$rowLabel |")
-        // Print each cell with fixed width for alignment (right-aligned numbers)
-        for (j in 1..size) {
-            val value = (i * j).toString().padStart(cellWidth - 1)
-            print(value)
+// Function to print the matrix in formatted style
+fun printMatrix(matrix: Array<IntArray>, rows: Int, cols: Int) {
+    for (i in 0 until rows) {
+        for (j in 0 until cols) {
+            // "%3d" means print as integer with 3 spaces for alignment
+            print("%3d\t".format(matrix[i][j]))
         }
-        println()
+        println() // New line after each row
     }
 }
-
-// -----------------------------------------------------------
-// Main — run both examples
-// -----------------------------------------------------------
 
 fun main() {
-    // Example 1: Classic style that mirrors the original C++ code structure
-    println("=== Example 1: Classic style ===")
-    PrintMultiplicationTable()
+    println("The following is a 3x3 random matrix:\n")
 
-    // Example 2: Professional, idiomatic Kotlin version with improved alignment
-    println("\n=== Example 2: Professional Kotlin style ===")
-    printMultiplicationTableProfessional(10)
+    // Declare a 3x3 matrix (array of arrays)
+    val matrix = Array(3) { IntArray(3) }
+
+    // Fill and print the matrix
+    fillMatrixWithRandomNumbers(matrix, 3, 3)
+    printMatrix(matrix, 3, 3)
+
+    // ---------------------------------------------------------------
+    // VERSION 2 (Professional Kotlin Style)
+    // ---------------------------------------------------------------
+
+    println("\n=========== Kotlin Professional Version ===========\n")
+
+    // Create a 3x3 matrix filled with random numbers in a single line
+    val proMatrix = Array(3) { IntArray(3) { Random.nextInt(1, 101) } }
+
+    // Print it in a clean, functional way
+    proMatrix.forEach { row ->
+        println(row.joinToString("\t") { "%3d".format(it) })
+    }
 }
