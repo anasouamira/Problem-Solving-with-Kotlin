@@ -1,111 +1,78 @@
-// 🔹 Problem04: Print all perfect numbers from 1 to N
-// We provide two approaches in one file:
-// - Example 1: Direct translation of the original C++ methodology (check divisors up to n/2).
-// - Example 2: Optimized professional version (using sqrt).
+// ===============================================================
+// Problem 04 | Fill 3x3 Matrix and Print Each Column Sum
+// ===============================================================
 
-import kotlin.math.sqrt
+import kotlin.random.Random
 
-// ===========================================================
-// Example 1 — Classic style (C++ translation methodology)
-// ===========================================================
+// -------------------- VERSION 1 (Educational Style) --------------------
 
-/**
- * Enum to represent whether a number is Perfect or NotPerfect.
- * This mirrors the C++ enum enmPrefectNotPerfect.
- */
-enum class PerfectStatus { Perfect, NotPerfect }
-
-/**
- * Reads a non-negative integer from the user.
- * Keeps retrying until user enters valid non-negative integer.
- */
-fun readPositiveNumberClassic(message: String): Int {
-    var number: Int
-    do {
-        print(message)
-        number = readLine()?.toIntOrNull() ?: Int.MIN_VALUE
-    } while (number < 0)
-    return number
+// Function to generate a random number between From and To (inclusive)
+fun randomNumber(from: Int, to: Int): Int {
+    return Random.nextInt(from, to + 1)
 }
 
-/**
- * Checks if a number is perfect by summing divisors up to n/2.
- * Returns PerfectStatus.Perfect if equal to the number.
- */
-fun checkPerfectClassic(number: Int): PerfectStatus {
-    if (number <= 1) return PerfectStatus.NotPerfect
-    val limit = number / 2
+// Function to fill a 3x3 matrix with random numbers from 1 to 100
+fun fillMatrixWithRandomNumbers(matrix: Array<IntArray>, rows: Int, cols: Int) {
+    for (i in 0 until rows) {
+        for (j in 0 until cols) {
+            matrix[i][j] = randomNumber(1, 100)
+        }
+    }
+}
+
+// Function to print the matrix neatly
+fun printMatrix(matrix: Array<IntArray>, rows: Int, cols: Int) {
+    for (i in 0 until rows) {
+        for (j in 0 until cols) {
+            // "%3d" ensures fixed width for alignment
+            print("%3d ".format(matrix[i][j]))
+        }
+        println()
+    }
+}
+
+// Function to calculate the sum of a specific column
+fun colSum(matrix: Array<IntArray>, rows: Int, colNumber: Int): Int {
     var sum = 0
-    for (d in 1..limit) {
-        if (number % d == 0) sum += d
+    for (i in 0 until rows) {
+        sum += matrix[i][colNumber]
     }
-    return if (sum == number) PerfectStatus.Perfect else PerfectStatus.NotPerfect
+    return sum
 }
 
-/**
- * Prints all perfect numbers from 1 to N using the classic method.
- */
-fun printPerfectNumbersClassic(n: Int) {
-    println("\nPerfect numbers from 1 to $n (classic):")
-    for (i in 1..n) {
-        if (checkPerfectClassic(i) == PerfectStatus.Perfect) {
-            println(i)
-        }
+// Function to print the sum of each column
+fun printEachColSum(matrix: Array<IntArray>, rows: Int, cols: Int) {
+    println("\nThe following are the sums of each column in the matrix:")
+    for (j in 0 until cols) {
+        println(" Col ${j + 1} Sum = ${colSum(matrix, rows, j)}")
     }
 }
 
-
-// ===========================================================
-// Example 2 — Optimized professional version
-// ===========================================================
-
-/**
- * Optimized check for perfect number using sqrt.
- */
-fun isPerfectOptimized(n: Int): Boolean {
-    if (n <= 1) return false
-    var sum = 1 // 1 is always a divisor for n > 1
-    val limit = sqrt(n.toDouble()).toInt()
-
-    for (i in 2..limit) {
-        if (n % i == 0) {
-            val other = n / i
-            sum += i
-            if (other != i) sum += other
-        }
-    }
-    return sum == n
-}
-
-/**
- * Prints all perfect numbers from 1 to N using the optimized method.
- */
-fun printPerfectNumbersOptimized(n: Int) {
-    println("\nPerfect numbers from 1 to $n (optimized):")
-    for (i in 2..n) {
-        if (isPerfectOptimized(i)) {
-            println(i)
-        }
-    }
-}
-
-
-// ===========================================================
-// Main function
-// ===========================================================
 fun main() {
-    val number = run {
-        var n: Int?
-        do {
-            print("Enter a positive number to find all perfect numbers from 1 to N: ")
-            n = readLine()?.toIntOrNull()
-        } while (n == null || n < 0)
-        n
+    // -------------------- Educational Version --------------------
+    println("The following is a 3x3 random matrix:\n")
+
+    val matrix = Array(3) { IntArray(3) }
+    fillMatrixWithRandomNumbers(matrix, 3, 3)
+    printMatrix(matrix, 3, 3)
+    printEachColSum(matrix, 3, 3)
+
+    // -------------------- Professional Kotlin Version --------------------
+    println("\n=========== Kotlin Professional Version ===========\n")
+
+    // Create a 3x3 matrix with random numbers between 1 and 100
+    val proMatrix = Array(3) { IntArray(3) { Random.nextInt(1, 101) } }
+
+    // Print the matrix nicely
+    proMatrix.forEach { row ->
+        println(row.joinToString("  ") { "%3d".format(it) })
     }
 
-    // Example 1 — same as the C++ methodology
-    printPerfectNumbersClassic(number)
+    // Compute column sums using map and sumOf
+    val colSums = (0 until 3).map { col -> proMatrix.sumOf { it[col] } }
 
-    // Example 2 — optimized professional version
-    printPerfectNumbersOptimized(number)
+    println("\nColumn sums:")
+    colSums.forEachIndexed { index, sum ->
+        println(" Col ${index + 1} Sum = $sum")
+    }
 }
