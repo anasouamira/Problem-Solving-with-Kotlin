@@ -1,65 +1,84 @@
-// 🔹 Problem05: Read a number and print it in reversed order
-// This file includes two examples:
-// Example 1 → Classic translation from C++ (same logic step-by-step)
-// Example 2 → Professional Kotlin version (more idiomatic and concise)
-
-
-// ===========================================================
-// Example 1 — Classic translation from the C++ methodology
-// ===========================================================
-
-/**
- * Reads a positive integer from the user.
- * Keeps asking until a non-negative number is entered.
- */
-fun readPositiveNumberClassic(message: String): Int {
-    var number: Int
-    do {
-        print(message)
-        number = readLine()?.toIntOrNull() ?: -1
-    } while (number < 0)
-    return number
-}
-
-/**
- * Prints digits of a number in reverse order using arithmetic operations.
- */
-fun printReversedClassic(number: Int) {
-    var num = number
-    println("\nReversed order (classic method):")
-    do {
-        val remainder = num % 10   // Extract last digit
-        println(remainder)         // Print it
-        num /= 10                  // Remove last digit
-    } while (num > 0)
-}
-
-
-// ===========================================================
-// Example 2 — Professional idiomatic Kotlin version
-// ===========================================================
-
-/**
- * Prints digits of a number in reverse order using Kotlin string manipulation.
- */
-fun printReversedOptimized(number: Int) {
-    println("\nReversed order (optimized Kotlin method):")
-    number.toString().reversed().forEach { digit ->
-        println(digit)
-    }
-}
-
-
-// ===========================================================
-// Main function
-// ===========================================================
+import kotlin.random.Random
 
 fun main() {
-    val number = readPositiveNumberClassic("Enter a number to print it in reversed order: ")
+    println("========= Version 1: Beginner Level =========")
 
-    // Example 1: Same logic as original C++ version
-    printReversedClassic(number)
+    // ---------- VERSION 1: SIMPLE STEP BY STEP ----------
+    // Create a 3x3 matrix (Array of Arrays)
+    val rows = 3
+    val cols = 3
+    val matrix = Array(rows) { IntArray(cols) }   // Matrix of 3x3 integers
+    val colSums = IntArray(cols)                  // Array to store column sums
 
-    // Example 2: Professional optimized Kotlin approach
-    printReversedOptimized(number)
+    // Function to fill matrix with random numbers (1..100)
+    fun fillMatrixRandom() {
+        for (i in 0 until rows) {
+            for (j in 0 until cols) {
+                matrix[i][j] = Random.nextInt(1, 101)
+            }
+        }
+    }
+
+    // Function to print matrix
+    fun printMatrix() {
+        println("The following is a 3x3 random matrix:\n")
+        for (i in 0 until rows) {
+            for (j in 0 until cols) {
+                print("${matrix[i][j].toString().padStart(3, ' ')} ")
+            }
+            println()
+        }
+    }
+
+    // Function to calculate column sum
+    fun colSum(colIndex: Int): Int {
+        var sum = 0
+        for (i in 0 until rows) {
+            sum += matrix[i][colIndex]
+        }
+        return sum
+    }
+
+    // Function to fill colSums array
+    fun fillColSums() {
+        for (j in 0 until cols) {
+            colSums[j] = colSum(j)
+        }
+    }
+
+    // Function to print sums
+    fun printColSums() {
+        println("\nThe following are the sums of each column in the matrix:\n")
+        for (i in 0 until cols) {
+            println("Col ${i + 1} Sum = ${colSums[i]}")
+        }
+    }
+
+    // Run the program (simple version)
+    fillMatrixRandom()
+    printMatrix()
+    fillColSums()
+    printColSums()
+
+
+    println("\n========= Version 2: Professional Level =========")
+
+    // ---------- VERSION 2: PROFESSIONAL AND CLEAN ----------
+    val matrix2 = Array(3) { IntArray(3) { Random.nextInt(1, 101) } }
+
+    // Print matrix using functional approach
+    println("\nThe following is a 3x3 random matrix:\n")
+    matrix2.forEach { row ->
+        println(row.joinToString(" ") { it.toString().padStart(3, ' ') })
+    }
+
+    // Compute column sums using indices
+    val colSums2 = IntArray(3) { col ->
+        matrix2.sumOf { it[col] }  // Sum of elements in column `col`
+    }
+
+    println("\nThe following are the sums of each column in the matrix:\n")
+    colSums2.forEachIndexed { index, sum ->
+        println("Col ${index + 1} Sum = $sum")
+    }
 }
