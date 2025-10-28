@@ -1,77 +1,83 @@
-import kotlin.math.sqrt
+// ===============================================================
+// Problem 02 | Fill 3x3 Matrix and Print Each Row Sum
+// ===============================================================
 
-//===============================================================
-// Solution 1: Same methodology as C++ version
-//===============================================================
+import kotlin.random.Random
 
-// Enum to represent Prime / Not Prime
-enum class PrimeCheck {
-    Prime, NotPrime
+// -------------------- VERSION 1 (Educational) --------------------
+
+// Function to generate a random number between From and To (inclusive)
+fun randomNumber(from: Int, to: Int): Int {
+    return Random.nextInt(from, to + 1)
 }
 
-// Function to read a positive number from user
-fun readPositiveNumber(message: String): Int {
-    var number: Int
-    do {
-        print("$message ")
-        number = readLine()?.toIntOrNull() ?: 0
-    } while (number <= 0) // keep asking until input is positive
-    return number
-}
-
-// Function to check if a number is prime (method: check until n/2)
-fun checkPrime(number: Int): PrimeCheck {
-    val m = number / 2
-    for (counter in 2..m) {
-        if (number % counter == 0) {
-            return PrimeCheck.NotPrime
-        }
-    }
-    return PrimeCheck.Prime
-}
-
-// Function to print primes from 1 to N
-fun printPrimesFrom1ToN(number: Int) {
-    println("\nPrime Numbers from 1 to $number are:")
-    for (i in 1..number) {
-        if (checkPrime(i) == PrimeCheck.Prime) {
-            println(i)
+// Function to fill a 3x3 matrix with random numbers from 1 to 100
+fun fillMatrixWithRandomNumbers(matrix: Array<IntArray>, rows: Int, cols: Int) {
+    for (i in 0 until rows) {
+        for (j in 0 until cols) {
+            matrix[i][j] = randomNumber(1, 100)
         }
     }
 }
 
-//===============================================================
-// Solution 2: Optimized / Professional version
-//===============================================================
-
-// Function to check if a number is prime (optimized with sqrt(n))
-fun isPrimeOptimized(n: Int): Boolean {
-    if (n < 2) return false
-    for (i in 2..sqrt(n.toDouble()).toInt()) {
-        if (n % i == 0) return false
-    }
-    return true
-}
-
-// Function to print primes using the optimized check
-fun printPrimesOptimized(limit: Int) {
-    println("\n[Optimized] Prime Numbers from 1 to $limit are:")
-    for (i in 1..limit) {
-        if (isPrimeOptimized(i)) {
-            println(i)
+// Function to print the matrix in formatted style
+fun printMatrix(matrix: Array<IntArray>, rows: Int, cols: Int) {
+    for (i in 0 until rows) {
+        for (j in 0 until cols) {
+            // "%3d" aligns the output into 3 spaces
+            print("%3d ".format(matrix[i][j]))
         }
+        println()
     }
 }
 
-//===============================================================
-// Main Function
-//===============================================================
+// Function to calculate the sum of a specific row
+fun rowSum(matrix: Array<IntArray>, rowNumber: Int, cols: Int): Int {
+    var sum = 0
+    for (j in 0 until cols) {
+        sum += matrix[rowNumber][j]
+    }
+    return sum
+}
+
+// Function to print the sum of each row
+fun printEachRowSum(matrix: Array<IntArray>, rows: Int, cols: Int) {
+    println("\nThe following are the sums of each row in the matrix:")
+    for (i in 0 until rows) {
+        println(" Row ${i + 1} Sum = ${rowSum(matrix, i, cols)}")
+    }
+}
+
 fun main() {
-    val number = readPositiveNumber("Please enter a positive number:")
+    println("The following is a 3x3 random matrix:\n")
 
-    // Call the first solution (same methodology as C++)
-    printPrimesFrom1ToN(number)
+    // Create a 3x3 matrix
+    val matrix = Array(3) { IntArray(3) }
 
-    // Call the optimized solution
-    printPrimesOptimized(number)
+    // Fill and display the matrix
+    fillMatrixWithRandomNumbers(matrix, 3, 3)
+    printMatrix(matrix, 3, 3)
+
+    // Display each row's sum
+    printEachRowSum(matrix, 3, 3)
+
+    // ---------------------------------------------------------------
+    // VERSION 2 (Professional Kotlin Style)
+    // ---------------------------------------------------------------
+
+    println("\n=========== Kotlin Professional Version ===========\n")
+
+    // Create a 3x3 matrix with random values directly
+    val proMatrix = Array(3) { IntArray(3) { Random.nextInt(1, 101) } }
+
+    // Print the matrix
+    proMatrix.forEach { row ->
+        println(row.joinToString("  ") { "%3d".format(it) })
+    }
+
+    // Print each row's sum using functional style
+    println("\nRow sums:")
+    proMatrix.forEachIndexed { index, row ->
+        println(" Row ${index + 1} Sum = ${row.sum()}")
+    }
 }
