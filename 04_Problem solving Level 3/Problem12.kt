@@ -1,97 +1,62 @@
-/*
-Problem12 |===========================================================
+import kotlin.random.Random
 
-Write a program to read a number and print letter pattern as follows?
+/* ===============================================
+   Version 1 — Educational style (element by element)
+   =============================================== */
+fun randomNumber(from: Int, to: Int) = Random.nextInt(from, to + 1)
 
-Input :
-5
-
-Output :
-55555
-4444
-333
-22
-1
-
-=====================================================================
-*/
-
-// ===========================================================
-// Example 1 — Classic C++ Style Logic
-// ===========================================================
-
-/**
- * Reads a positive short number from the user.
- * Keeps asking until a valid positive number is entered.
- */
-fun readPositiveShortClassic(message: String): Short {
-    var number: Short?
-    do {
-        print(message)
-        number = readLine()?.toShortOrNull()
-    } while (number == null || number < 0)
-    return number
+fun fillMatrix(matrix: Array<IntArray>, rows: Int, cols: Int) {
+    for (i in 0 until rows)
+        for (j in 0 until cols)
+            matrix[i][j] = randomNumber(1, 10)
 }
 
-/**
- * Prints the inverted numeric pattern exactly like the C++ version.
- * Example for input 5:
- * 55555
- * 4444
- * 333
- * 22
- * 1
- */
-fun printInvertedPatternClassic(number: Short) {
-    for (i in number downTo 1) {        // From number down to 1
-        for (j in 1..i) {               // Print i, i times
-            print(i)
-        }
-        println()                       // Move to next line
+fun printMatrix(matrix: Array<IntArray>) {
+    matrix.forEach { row ->
+        println(row.joinToString(" ") { String.format("%02d", it) })
     }
 }
 
-
-// ===========================================================
-// Example 2 — Optimized Kotlin Version
-// ===========================================================
-
-/**
- * Reads a positive number (cleaner Kotlin version).
- */
-fun readPositiveShortOptimized(message: String): Int {
-    var number: Int?
-    do {
-        print(message)
-        number = readLine()?.toIntOrNull()
-    } while (number == null || number <= 0)
-    return number
+fun areMatricesEqual(matrix1: Array<IntArray>, matrix2: Array<IntArray>): Boolean {
+    for (i in matrix1.indices)
+        for (j in matrix1[i].indices)
+            if (matrix1[i][j] != matrix2[i][j]) return false
+    return true
 }
 
-/**
- * Prints the same pattern but using Kotlin's string utilities.
- * Uses the repeat() function to simplify inner loop.
- */
-fun printInvertedPatternOptimized(number: Int) {
-    println("\n--- Kotlin Optimized Pattern ---")
-    for (i in number downTo 1) {
-        println("$i".repeat(i))          // Repeat number as string i times
-    }
-}
+/* ===============================================
+   Version 2 — Professional Kotlin style (functional)
+   =============================================== */
+fun generateRandomMatrix(rows: Int, cols: Int) =
+    Array(rows) { IntArray(cols) { Random.nextInt(1, 11) } }
 
+fun areMatricesEqualPro(matrix1: Array<IntArray>, matrix2: Array<IntArray>) =
+    matrix1.indices.all { i -> matrix1[i].contentEquals(matrix2[i]) }
 
-// ===========================================================
-// Main Function — Run Both Examples
-// ===========================================================
+/* ===============================================
+   Main function
+   =============================================== */
 fun main() {
-    val numberClassic = readPositiveShortClassic("Enter a number to print inverted pattern: ")
+    val rows = 3
+    val cols = 3
 
-    println("\n--- Classic Approach ---")
-    printInvertedPatternClassic(numberClassic)
+    println("====== Version 1: Educational style ======")
+    val matrix1 = Array(rows) { IntArray(cols) }
+    val matrix2 = Array(rows) { IntArray(cols) }
+    fillMatrix(matrix1, rows, cols)
+    fillMatrix(matrix2, rows, cols)
+    println("Matrix1:")
+    printMatrix(matrix1)
+    println("\nMatrix2:")
+    printMatrix(matrix2)
+    println("\nAre matrices equal? ${if (areMatricesEqual(matrix1, matrix2)) "YES" else "NO"}")
 
-    println()
-    val numberOptimized = numberClassic.toInt()
-
-    // Optimized Kotlin approach
-    printInvertedPatternOptimized(numberOptimized)
+    println("\n====== Version 2: Professional Kotlin style ======")
+    val matrixPro1 = generateRandomMatrix(rows, cols)
+    val matrixPro2 = generateRandomMatrix(rows, cols)
+    println("Matrix1:")
+    printMatrix(matrixPro1)
+    println("\nMatrix2:")
+    printMatrix(matrixPro2)
+    println("\nAre matrices equal? ${if (areMatricesEqualPro(matrixPro1, matrixPro2)) "YES" else "NO"}")
 }
