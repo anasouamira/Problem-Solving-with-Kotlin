@@ -1,96 +1,45 @@
-/*
-Problem13 |===========================================================
-
-Write a program to read a number and print letter pattern as follows?
-
-Input :
-5
-
-Output :
-1
-22
-333
-4444
-55555
-
-=====================================================================
-*/
-
-// ===========================================================
-// Example 1 — Classic C++ Style Logic
-// ===========================================================
-
-/**
- * Reads a positive short number from the user.
- * Keeps asking until a valid positive number is entered.
- */
-fun readPositiveShortClassic(message: String): Short {
-    var number: Short?
-    do {
-        print(message)
-        number = readLine()?.toShortOrNull()
-    } while (number == null || number < 0)
-    return number
+/* ===============================================
+   Version 1 — Educational style
+   =============================================== */
+fun printMatrix(matrix: Array<IntArray>) {
+    matrix.forEach { row ->
+        println(row.joinToString(" ") { it.toString().padStart(3, ' ') })
+    }
 }
 
-/**
- * Prints a number pattern like this (classic nested loop logic):
- * 1
- * 22
- * 333
- * 4444
- * 55555
- */
-fun printNumberPatternClassic(number: Short) {
-    for (i in 1..number) {              // Loop rows from 1 to N
-        for (j in 1..i) {               // Print i, i times
-            print(i)
+fun isIdentityMatrix(matrix: Array<IntArray>): Boolean {
+    for (i in matrix.indices) {
+        for (j in matrix[i].indices) {
+            if (i == j && matrix[i][j] != 1) return false
+            if (i != j && matrix[i][j] != 0) return false
         }
-        println()                       // Move to the next line
     }
+    return true
 }
 
-
-// ===========================================================
-// Example 2 — Optimized Kotlin Version
-// ===========================================================
-
-/**
- * Reads a positive number (cleaner Kotlin version).
- */
-fun readPositiveIntOptimized(message: String): Int {
-    var number: Int?
-    do {
-        print(message)
-        number = readLine()?.toIntOrNull()
-    } while (number == null || number <= 0)
-    return number
-}
-
-/**
- * Prints the same number pattern using Kotlin's repeat() function.
- * This eliminates the need for an inner loop.
- */
-fun printNumberPatternOptimized(number: Int) {
-    println("\n--- Kotlin Optimized Pattern ---")
-    for (i in 1..number) {
-        println("$i".repeat(i))          // Repeat the string value of i, i times
+/* ===============================================
+   Version 2 — Professional Kotlin style
+   =============================================== */
+fun isIdentityMatrixPro(matrix: Array<IntArray>) =
+    matrix.indices.all { i ->
+        matrix[i].indices.all { j -> (i == j && matrix[i][j] == 1) || (i != j && matrix[i][j] == 0) }
     }
-}
 
-
-// ===========================================================
-// Main Function — Run Both Examples
-// ===========================================================
+/* ===============================================
+   Main function
+   =============================================== */
 fun main() {
-    val numberClassic = readPositiveShortClassic("Enter a number to print pattern: ")
+    val matrix = arrayOf(
+        intArrayOf(1, 0, 0),
+        intArrayOf(0, 1, 0),
+        intArrayOf(0, 0, 1)
+    )
 
-    println("\n--- Classic Approach ---")
-    printNumberPatternClassic(numberClassic)
+    println("====== Version 1: Educational ======")
+    printMatrix(matrix)
+    println(if (isIdentityMatrix(matrix)) "\nYES: Matrix is identity." else "\nNO: Matrix is NOT identity.")
 
-    println()
-    val numberOptimized = numberClassic.toInt()
-
-    // Optimized Kotlin approach
-    printNumberPatternOptimized(numberOptimized)
+    println("\n====== Version 2: Professional Kotlin ======")
+    printMatrix(matrix)
+    println(if (isIdentityMatrixPro(matrix)) "\nYES: Matrix is identity." else "\nNO: Matrix is NOT identity.")
 }
