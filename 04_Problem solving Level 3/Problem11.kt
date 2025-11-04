@@ -1,104 +1,72 @@
-/*
-Problem11 |=============================================================
+import kotlin.random.Random
 
-Write a program to read a number and check if it is Palindrome?
+/* ===============================================
+   Version 1 — Educational style (element by element)
+   =============================================== */
 
-Input :
-1234
-12321
+// Generate random number between from..to
+fun randomNumber(from: Int, to: Int) = Random.nextInt(from, to + 1)
 
-Output :
-No, it is NOT a Palindrome number.
-Yes, it is a Palindrome number.
-
-=======================================================================
-*/
-
-import kotlin.math.*
-
-// ===========================================================
-// Example 1 — Classic C++-style logic
-// ===========================================================
-
-/**
- * Reads a positive integer from the user.
- * Keeps asking until the input is valid (positive number).
- */
-fun readPositiveNumberClassic(message: String): Int {
-    var number: Int?
-    do {
-        print(message)
-        number = readLine()?.toIntOrNull()
-    } while (number == null || number < 0)
-    return number
+// Fill a 3x3 matrix with random numbers
+fun fillMatrix(matrix: Array<IntArray>, rows: Int, cols: Int) {
+    for (i in 0 until rows)
+        for (j in 0 until cols)
+            matrix[i][j] = randomNumber(1, 10)
 }
 
-/**
- * Reverses a number manually (like the C++ version using remainder and division).
- */
-fun reverseNumberClassic(numberInput: Int): Int {
-    var number = numberInput
-    var remainder: Int
-    var reversed = 0
-
-    while (number > 0) {
-        remainder = number % 10           // Extract last digit
-        number /= 10                      // Remove last digit
-        reversed = reversed * 10 + remainder  // Build reversed number
+// Print matrix
+fun printMatrix(matrix: Array<IntArray>) {
+    matrix.forEach { row ->
+        println(row.joinToString(" ") { String.format("%02d", it) })
     }
-
-    return reversed
 }
 
-/**
- * Checks if a number is a palindrome by comparing it with its reversed version.
- */
-fun isPalindromeClassic(number: Int): Boolean {
-    return number == reverseNumberClassic(number)
+// Compare two matrices element by element
+fun areMatricesEqual(matrix1: Array<IntArray>, matrix2: Array<IntArray>): Boolean {
+    for (i in matrix1.indices) {
+        for (j in matrix1[i].indices) {
+            if (matrix1[i][j] != matrix2[i][j]) return false
+        }
+    }
+    return true
 }
 
+/* ===============================================
+   Version 2 — Professional Kotlin style (functional)
+   =============================================== */
 
-// ===========================================================
-// Example 2 — Optimized Kotlin version
-// ===========================================================
+// Generate random matrix
+fun generateRandomMatrix(rows: Int, cols: Int) =
+    Array(rows) { IntArray(cols) { Random.nextInt(1, 11) } }
 
-/**
- * Reads a positive number (cleaner Kotlin version).
- */
-fun readPositiveNumberOptimized(message: String): Int {
-    var number: Int?
-    do {
-        print(message)
-        number = readLine()?.toIntOrNull()
-    } while (number == null || number < 0)
-    return number
-}
+// Check equality using functional approach
+fun areMatricesEqualPro(matrix1: Array<IntArray>, matrix2: Array<IntArray>) =
+    matrix1.indices.all { i -> matrix1[i].contentEquals(matrix2[i]) }
 
-/**
- * Checks palindrome using string reversal — modern Kotlin way.
- */
-fun isPalindromeOptimized(number: Int): Boolean {
-    val text = number.toString()          // Convert number to string
-    return text == text.reversed()        // Compare with its reversed form
-}
-
-
-// ===========================================================
-// Main — Run both examples
-// ===========================================================
+/* ===============================================
+   Main function — run both versions
+   =============================================== */
 fun main() {
-    // Read number once for both methods
-    val number = readPositiveNumberClassic("Enter a number to check if it is a Palindrome: ")
+    val rows = 3
+    val cols = 3
 
-    println("\n--- Classic Approach ---")
-    if (isPalindromeClassic(number))
-        println("Yes, it is a Palindrome number.")
-    else
-        println("No, it is NOT a Palindrome number.")
+    println("====== Version 1: Educational style ======")
+    val matrix1 = Array(rows) { IntArray(cols) }
+    val matrix2 = Array(rows) { IntArray(cols) }
+    fillMatrix(matrix1, rows, cols)
+    fillMatrix(matrix2, rows, cols)
+    println("Matrix1:")
+    printMatrix(matrix1)
+    println("\nMatrix2:")
+    printMatrix(matrix2)
+    println("\nAre matrices equal? ${if (areMatricesEqual(matrix1, matrix2)) "YES" else "NO"}")
 
-    println("\n--- Kotlin Optimized Approach ---")
-    if (isPalindromeOptimized(number))
-        println("✅ Palindrome (checked using string reversal).")
-    else
-        println("❌ Not a Palindrome (checked using string reversal).")
+    println("\n====== Version 2: Professional Kotlin style ======")
+    val matrixPro1 = generateRandomMatrix(rows, cols)
+    val matrixPro2 = generateRandomMatrix(rows, cols)
+    println("Matrix1:")
+    printMatrix(matrixPro1)
+    println("\nMatrix2:")
+    printMatrix(matrixPro2)
+    println("\nAre matrices equal? ${if (areMatricesEqualPro(matrixPro1, matrixPro2)) "YES" else "NO"}")
 }
