@@ -1,114 +1,83 @@
-/*
-Problem10 |============================================================
+import kotlin.random.Random
 
-Write a program to read a number and print it in order 
-from left to right.
+/* ===========================================================
+   Version 1 — Educational Style (same as original C++ logic)
+   =========================================================== */
 
-Input :
-1234
-
-Output :
-1
-2
-3
-4
-
-=======================================================================
-*/
-
-// ===========================================================
-// Example 1 — Classic C++-style methodology
-// ===========================================================
-
-/**
- * Reads a positive number from the user.
- * Keeps asking until the user enters a valid positive integer.
- */
-fun readPositiveNumberClassic(message: String): Int {
-    var number: Int?
-    do {
-        print(message)
-        number = readLine()?.toIntOrNull()
-    } while (number == null || number <= 0)
-    return number
+// Function to generate a random number between From and To
+fun randomNumber(from: Int, to: Int): Int {
+    return Random.nextInt(from, to + 1)
 }
 
-/**
- * Reverses the digits of the given number (same logic as in C++).
- */
-fun reverseNumberClassic(numberInput: Int): Int {
-    var number = numberInput
-    var remainder: Int
-    var reversed = 0
-
-    while (number > 0) {
-        remainder = number % 10
-        number /= 10
-        reversed = reversed * 10 + remainder
-    }
-
-    return reversed
-}
-
-/**
- * Prints each digit of the number on a new line.
- */
-fun printDigitsClassic(numberInput: Int) {
-    var number = numberInput
-    var remainder: Int
-
-    while (number > 0) {
-        remainder = number % 10
-        number /= 10
-        println(remainder)
+// Function to fill a 3x3 matrix with random numbers
+fun fillMatrixWithRandomNumbers(matrix: Array<IntArray>, rows: Int, cols: Int) {
+    for (i in 0 until rows) {
+        for (j in 0 until cols) {
+            matrix[i][j] = randomNumber(1, 10) // Assign random number between 1 and 10
+        }
     }
 }
 
-
-// ===========================================================
-// Example 2 — Optimized Kotlin version
-// ===========================================================
-
-/**
- * Reads a positive number (same validation, but cleaner function).
- */
-fun readPositiveNumberOptimized(message: String): Int {
-    var number: Int?
-    do {
-        print(message)
-        number = readLine()?.toIntOrNull()
-    } while (number == null || number <= 0)
-    return number
-}
-
-/**
- * Prints digits from left to right directly by converting to string.
- * This avoids reversing and arithmetic operations.
- */
-fun printDigitsOptimized(number: Int) {
-    println("\nDigits (optimized Kotlin approach):")
-    number.toString().forEach { digit ->
-        println(digit)
+// Function to print the matrix in formatted grid
+fun printMatrix(matrix: Array<IntArray>, rows: Int, cols: Int) {
+    for (i in 0 until rows) {
+        for (j in 0 until cols) {
+            print(String.format(" %02d ", matrix[i][j])) // print numbers with leading zeros
+        }
+        println()
     }
 }
 
+// Function to calculate sum of all elements in the matrix
+fun sumOfMatrix(matrix: Array<IntArray>, rows: Int, cols: Int): Int {
+    var sum = 0
+    for (i in 0 until rows) {
+        for (j in 0 until cols) {
+            sum += matrix[i][j]
+        }
+    }
+    return sum
+}
 
-// ===========================================================
-// Main — Run both examples
-// ===========================================================
+/* ===========================================================
+   Version 2 — Professional Kotlin Style (clean & idiomatic)
+   =========================================================== */
+
+fun generateRandomMatrix(rows: Int, cols: Int, range: IntRange = 1..10): Array<IntArray> {
+    // Generate matrix using lambda expression and Kotlin array constructors
+    return Array(rows) { IntArray(cols) { Random.nextInt(range.first, range.last + 1) } }
+}
+
+fun printMatrixPro(matrix: Array<IntArray>) {
+    // Use Kotlin joinToString for elegant formatting
+    matrix.forEach { row ->
+        println(row.joinToString(" ") { String.format("%02d", it) })
+    }
+}
+
+fun sumMatrixPro(matrix: Array<IntArray>): Int {
+    // Sum using functional approach (sumOf)
+    return matrix.sumOf { it.sum() }
+}
+
+/* ===========================================================
+   Main Function — Runs both versions
+   =========================================================== */
+
 fun main() {
-    // Read the number once and use it for both methods
-    val number = run {
-        var n: Int?
-        do {
-            print("Please enter a positive number: ")
-            n = readLine()?.toIntOrNull()
-        } while (n == null || n <= 0)
-        n
-    }
+    val rows = 3
+    val cols = 3
 
-    println("\nDigits (classic approach):")
-    printDigitsClassic(reverseNumberClassic(number))
+    println("=========== Version 1: Educational Style ===========")
+    val matrix1 = Array(rows) { IntArray(cols) }
+    fillMatrixWithRandomNumbers(matrix1, rows, cols)
+    println("Matrix1:")
+    printMatrix(matrix1, rows, cols)
+    println("\nSum of Matrix1 is: ${sumOfMatrix(matrix1, rows, cols)}")
 
-    printDigitsOptimized(number)
+    println("\n=========== Version 2: Professional Kotlin Style ===========")
+    val matrix2 = generateRandomMatrix(rows, cols)
+    println("Matrix2:")
+    printMatrixPro(matrix2)
+    println("\nSum of Matrix2 is: ${sumMatrixPro(matrix2)}")
 }
